@@ -23,6 +23,7 @@
   --font-size-h1: clamp(1.8rem, 5vw, 2.6rem);
   --font-size-card-title: clamp(1.125rem, 2.5vw, 1.25rem);
   --font-size-small: clamp(0.78rem, 1.8vw, 0.92rem);
+  --font-size-input: 1rem;
   --line-height-base: 1.5;
   --line-height-heading: 1.15;
 
@@ -43,6 +44,12 @@
   --media-ratio: 16 / 9;
   --touch-target-min: 44px;
   --bottom-bar-height: 64px;
+
+  --space-safe-top: env(safe-area-inset-top);
+  --space-safe-right: env(safe-area-inset-right);
+  --space-safe-bottom: env(safe-area-inset-bottom);
+  --space-safe-left: env(safe-area-inset-left);
+  --outline-focus-width: 3px;
 }
 
 [data-theme="dark"] {

@@ -16,13 +16,18 @@ html {
   min-width: 320px;
   min-height: 100%;
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
   min-width: 320px;
   min-height: 100dvh;
   margin: 0;
+  overflow-x: hidden;
   overflow-wrap: anywhere;
+  padding-top: var(--space-safe-top);
+  padding-right: var(--space-safe-right);
+  padding-left: var(--space-safe-left);
   font-family: var(--font-sans);
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
@@ -44,9 +49,10 @@ button,
 input,
 textarea,
 select {
+  min-width: var(--touch-target-min);
   min-height: var(--touch-target-min);
   font: inherit;
-  font-size: max(1rem, 16px);
+  font-size: var(--font-size-input);
 }
 
 a {
@@ -54,7 +60,10 @@ a {
 }
 
 button,
-a {
+a,
+input,
+textarea,
+select {
   touch-action: manipulation;
 }
 
@@ -63,7 +72,7 @@ a {
   *::before,
   *::after {
     scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
+    animation: none !important;
+    transition: none !important;
   }
 }

@@ -53,3 +53,26 @@
 - Les états chargement, erreur, vide et hors-ligne sont prévus.
 - Les safe areas iOS sont réservées lorsque les contrôles atteignent le bas.
 - Les animations sont limitées à `transform` et `opacity`.
+
+## Checklist responsive mobile-first
+
+Tester les cas suivants dans DevTools puis sur appareils réels :
+
+| Largeur | Orientation        | Vérifications                                                     |
+| ------- | ------------------ | ----------------------------------------------------------------- |
+| 320 px  | Portrait / paysage | Aucun débordement horizontal, liens et boutons à 44 × 44 px       |
+| 360 px  | Portrait           | Grille sur une colonne, marge latérale cohérente                  |
+| 390 px  | Portrait           | Maquette de référence, ratio 16/9 des médias, zone basse réservée |
+| 430 px  | Portrait           | Aucun recouvrement du titre ou du lieu                            |
+| 600 px  | Portrait / paysage | Passage à 2 colonnes                                              |
+| 768 px  | Portrait / paysage | Deux colonnes sans sidebar inventée                               |
+| 1024 px | Paysage            | Trois colonnes à partir de 900 px                                 |
+| 1280 px | Paysage            | Colonnes de 280 px minimum                                        |
+
+Contrôles transverses :
+
+- Zoom navigateur à 200 % : aucun contenu inutilisable ou masqué.
+- Modes clair et sombre : vérifier les contrastes des textes et badges.
+- Paysage iPhone/Android : vérifier les quatre safe areas.
+- Champs futurs : police minimale de 16 px pour éviter le zoom iOS.
+- Zones tactiles, navigation clavier et `prefers-reduced-motion`.
