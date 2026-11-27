@@ -4,21 +4,16 @@
  * Les icônes absentes de la maquette viennent de Lucide.
  */
 import {
-  ArrowLeft,
   ImagePlay,
   Images,
   Lock,
   LogOut,
   MessageCircle,
-  Minus,
-  Plus as PlusLucide,
-  SlidersHorizontal,
   Users,
   createElement,
   type IconNode,
 } from "lucide";
 
-import apple from "../assets/icons/apple.svg?raw";
 import back from "../assets/icons/back_white.svg?raw";
 import cameraSwitch from "../assets/icons/cameraswitch_white.svg?raw";
 import community from "../assets/icons/community.svg?raw";
@@ -47,7 +42,6 @@ import storyPlus from "../assets/icons/story-plus.svg?raw";
 import ticket from "../assets/icons/ticket.svg?raw";
 
 const figmaIcons = {
-  apple,
   back,
   "camera-switch": cameraSwitch,
   community,
@@ -77,15 +71,11 @@ const figmaIcons = {
 } as const;
 
 const lucideIcons = {
-  "arrow-left": ArrowLeft,
   gif: ImagePlay,
   gallery: Images,
   lock: Lock,
   logout: LogOut,
   comment: MessageCircle,
-  minus: Minus,
-  add: PlusLucide,
-  filters: SlidersHorizontal,
   users: Users,
 } as const satisfies Record<string, IconNode>;
 
@@ -113,7 +103,7 @@ export function iconSvg(name: IconName): string {
 }
 
 /** Avatars : fichiers lourds (images embarquées), chargés en URL et non inlinés. */
-export const AVATAR_URLS = {
+const AVATAR_URLS = {
   "avatar-1": new URL("../assets/icons/avatar-1.svg", import.meta.url).href,
   "avatar-2": new URL("../assets/icons/avatar-2.svg", import.meta.url).href,
 } as const;

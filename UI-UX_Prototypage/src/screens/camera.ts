@@ -2,7 +2,7 @@
  * Création de post / story : « Accès Appareil » → « Photo » → publication.
  * Capture WebRTC (getUserMedia) avec repli sur <input type="file" capture="environment">.
  */
-import { mountScreen, root, toast } from "../app.ts";
+import { mountScreen, openAuthGate, root, toast } from "../app.ts";
 import { isAuthenticated } from "../auth.ts";
 import { goBack, navigate } from "../router.ts";
 import { getCurrentUser, getPosts, setPosts } from "../store.ts";
@@ -15,6 +15,7 @@ const MAX_SIDE = 1080;
 export function renderCamera(): void {
   if (!isAuthenticated()) {
     navigate("/community", { replace: true });
+    openAuthGate("/camera");
     return;
   }
   const supported = Boolean(navigator.mediaDevices?.getUserMedia);
@@ -208,6 +209,7 @@ function renderComposer(image: string): void {
       const user = getCurrentUser();
       const post: CommunityPost = {
         id: `post-${Date.now()}`,
+        authorId: user?.id,
         author: user?.name ?? "Utilisateur",
         avatar: (user?.name ?? "U").charAt(0).toUpperCase(),
         text: String(data.get("text") ?? "").trim() || (kind === "story" ? "Nouvelle story" : "Nouvelle sortie"),

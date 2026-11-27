@@ -9,7 +9,6 @@
     white-space: nowrap !important;
   }
 
-  .grow { flex: 1 1 auto; min-width: 0; }
   .self-center { align-self: center; }
   .self-start { align-self: flex-start; }
 }

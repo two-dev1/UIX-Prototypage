@@ -6,7 +6,7 @@ export interface MapLocationData {
   addressCity?: string | null;
 }
 
-export interface MapLinks {
+interface MapLinks {
   address: string;
   google: string | null;
   waze: string | null;

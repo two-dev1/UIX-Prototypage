@@ -26,6 +26,19 @@
     padding-bottom: calc(var(--space-48) + var(--safe-bottom));
   }
 
+  /* Conteneur des écrans applicatifs (nav gauche + contenu + panneau droit sur grand écran) */
+  .app-layout {
+    display: flex;
+    justify-content: center;
+    flex: 1 0 auto;
+    width: 100%;
+  }
+
+  .app-layout > .screen {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
   /* Écrans d'onboarding : logo en haut, contenu, action en bas */
   .onboarding {
     display: flex;
@@ -45,6 +58,44 @@
       calc(var(--gutter) + var(--safe-left));
     background: var(--color-surface);
     animation: screen-in var(--duration) var(--ease);
+  }
+
+  .tutorial { gap: var(--space-32); }
+
+  .tutorial__skip {
+    position: absolute;
+    right: -12px;
+    min-height: var(--size-touch);
+    color: var(--color-text-muted);
+  }
+
+  .tutorial__track {
+    display: flex;
+    flex: 1 1 auto;
+    width: calc(100% + var(--gutter) * 2);
+    margin-inline: calc(var(--gutter) * -1);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .tutorial__track::-webkit-scrollbar { display: none; }
+
+  .tutorial__slide {
+    display: flex;
+    flex: 0 0 100%;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: var(--space-40);
+    padding-inline: var(--gutter);
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+
+  .onboarding--join {
+    padding: 0;
+    gap: 0;
   }
 
   .onboarding--center {
@@ -72,9 +123,6 @@
     width: 100%;
   }
 
-  .onboarding__body--grow {
-    flex: 1 1 auto;
-  }
 
   /* Empilements génériques */
   .stack {
@@ -100,11 +148,6 @@
     width: 100%;
   }
 
-  .row--between { justify-content: space-between; }
-  .row--center { justify-content: center; }
-  .row--start { align-items: flex-start; }
-  .row--20 { gap: var(--space-20); }
-  .row--30 { gap: 30px; }
 
   /* Défilement horizontal (filtres, stories, outs) */
   .h-scroll {

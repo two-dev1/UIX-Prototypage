@@ -6,7 +6,10 @@ const RECORDS_URL =
 /** Limite maximale acceptée par l'API OpenData v2.1. */
 export const API_MAX_LIMIT = 100;
 
-export interface GetEventsOptions {
+/** Champs interrogés par la recherche plein texte (insensible aux accents). */
+const SEARCH_FIELDS = ["title", "lead_text", "qfap_tags", "address_name", "address_city"] as const;
+
+interface GetEventsOptions {
   limit?: number;
   offset?: number;
   search?: string;
@@ -33,8 +36,14 @@ export async function getEventsPage(
     limit: String(Math.min(limit, API_MAX_LIMIT)),
     offset: String(offset),
   });
-  if (search.trim()) params.set("search", search.trim());
   const conditions: string[] = [];
+  // L'API v2.1 ignore le paramètre `search` (format v1) : la recherche passe par ODSQL,
+  // limitée aux champs pertinents (la description produit trop de faux positifs).
+  const query = search.trim();
+  if (query) {
+    const term = odsqlString(query);
+    conditions.push(`(${SEARCH_FIELDS.map((field) => `search(${field}, "${term}")`).join(" or ")})`);
+  }
   if (freeOnly) conditions.push('price_type="gratuit"');
   if (arrondissement)
     conditions.push(`address_zipcode="${odsqlString(arrondissement)}"`);

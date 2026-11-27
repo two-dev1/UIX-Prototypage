@@ -14,9 +14,3 @@ export function requireElement<T extends Element>(
 export function isHtmlElement(element: Element): element is HTMLElement {
   return element instanceof HTMLElement;
 }
-
-export function isHtmlButtonElement(
-  element: Element,
-): element is HTMLButtonElement {
-  return element instanceof HTMLButtonElement;
-}

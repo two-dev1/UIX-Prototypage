@@ -1,7 +1,9 @@
+export type AuthMode = "login" | "register" | "forgot" | "reset";
+
 export type AppRoute =
-  | { type: "welcome" }
+  | { type: "tutorial" }
   | { type: "start" }
-  | { type: "auth"; mode: "login" | "register" }
+  | { type: "auth"; mode: AuthMode }
   | { type: "home" }
   | { type: "event"; id: string }
   | { type: "tickets" }
@@ -23,12 +25,16 @@ export function readRoute(): AppRoute {
     .filter((segment) => segment.length > 0);
 
   switch (first) {
+    case "tutorial":
     case "welcome":
-      return { type: "welcome" };
+      return { type: "tutorial" };
     case "start":
       return { type: "start" };
     case "auth":
-      return { type: "auth", mode: second === "register" ? "register" : "login" };
+      return {
+        type: "auth",
+        mode: second === "register" || second === "forgot" || second === "reset" ? second : "login",
+      };
     case "event":
       return second ? { type: "event", id: decodeURIComponent(second) } : { type: "home" };
     case "share":

@@ -66,7 +66,7 @@ export function formatPrice(event: ParisEvent): { label: string; free: boolean }
     Number(match[1].replace(",", ".")),
   );
   const max = Math.max(0, ...amounts.filter((value) => Number.isFinite(value)));
-  if (max > 0) return { label: `${String(max).replace(".", ",")}€`, free: false };
+  if (max > 0) return { label: `${priceFormat(max)}€`, free: false };
   if (type.includes("payant")) return { label: "Payant", free: false };
   return { label: type ? capitalize(type) : "Tarif ?", free: false };
 }
@@ -121,6 +121,12 @@ export function truncate(text: string, maxLength: number): string {
   const lastSpace = slice.lastIndexOf(" ");
   const cut = lastSpace > maxLength * 0.6 ? slice.slice(0, lastSpace) : slice;
   return `${cut.trimEnd()}…`;
+}
+
+/** 24.3 → « 24,30 », 12 → « 12 ». */
+function priceFormat(value: number): string {
+  const decimals = Number.isInteger(value) ? 0 : 2;
+  return new Intl.NumberFormat("fr-FR", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(value);
 }
 
 function capitalize(value: string): string {

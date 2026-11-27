@@ -93,14 +93,15 @@ export function renderHome(): void {
       <section class="feed" aria-labelledby="feed-title">
         <h2 id="feed-title" class="visually-hidden">Événements</h2>
         <ul class="feed" id="event-grid"></ul>
-        <p class="status" id="event-status" aria-live="polite"></p>
+        <div class="status" id="event-status" aria-live="polite"></div>
         <span id="event-sentinel" aria-hidden="true"></span>
       </section>`,
       "home",
     ),
     {
       ...chromeActions({
-        onSearch: (query) => {
+        onSearch: (query, { live }) => {
+          if (live && query.length > 0 && query.length < 2) return;
           if (query === state.searchValue) return;
           state.searchValue = query;
           const title = root.querySelector(".display");
@@ -116,6 +117,12 @@ export function renderHome(): void {
       },
       "reset-filters": () => {
         Object.assign(state, { freeOnly: false, slotFilter: "", category: "", arrondissement: "", searchValue: "" });
+        const title = root.querySelector(".display");
+        if (title) title.textContent = "On sort sur Paris?";
+        applyFilters();
+      },
+      "clear-search": () => {
+        state.searchValue = "";
         const title = root.querySelector(".display");
         if (title) title.textContent = "On sort sur Paris?";
         applyFilters();
@@ -157,6 +164,11 @@ export function renderHome(): void {
 function refreshPills(): void {
   const host = root.querySelector("[data-pills]");
   if (host) host.innerHTML = pills();
+}
+
+/** Catégorie courante, lue par l'écran Catégories pour surligner la bonne carte. */
+export function activeCategory(): string {
+  return state.category;
 }
 
 function applyFilters(): void {
@@ -275,6 +287,29 @@ function renderEventGrid(events: ParisEvent[], replace: boolean): void {
   else grid.insertAdjacentHTML("beforeend", html);
 }
 
+/** État vide : message + filtres existants pour relancer la recherche. */
+function noResults(): string {
+  const hasSearch = Boolean(state.searchValue);
+  return `<div class="empty">
+    <p class="h1">Aucun résultat</p>
+    <p class="body">${
+      hasSearch
+        ? `Rien pour « ${escapeHtml(state.searchValue)} ». Affinez votre recherche ou essayez un filtre.`
+        : "Aucun événement avec ces filtres. Affinez votre recherche."
+    }</p>
+    <div class="option-list option-list--center">
+      ${hasSearch ? `<button type="button" class="chip" data-action="clear-search">Effacer la recherche</button>` : ""}
+      <button type="button" class="chip" data-action="reset-filters">Tout voir</button>
+      <button type="button" class="chip" data-action="toggle-free">Gratuit</button>
+      <button type="button" class="chip" data-action="toggle-slot" data-slot="Soir">Ce soir</button>
+      ${QUICK_CATEGORIES.map((category) => `<button type="button" class="chip" data-action="toggle-category" data-category="${escapeHtml(category)}">${escapeHtml(category)}</button>`).join("")}
+      <button type="button" class="chip" data-action="open-categories">Catégories</button>
+      <button type="button" class="chip" data-action="open-filters">Arrondissement</button>
+      <button type="button" class="chip" data-action="search">Nouvelle recherche</button>
+    </div>
+  </div>`;
+}
+
 function updateEventStatus(): void {
   const status = root.querySelector<HTMLElement>("#event-status");
   if (!status) return;
@@ -286,7 +321,10 @@ function updateEventStatus(): void {
     return;
   }
   if (state.isLoading) status.textContent = state.events.length > 0 ? "Chargement…" : "";
-  else if (state.events.length === 0) status.textContent = "Aucun événement ne correspond à ta recherche.";
+  else if (state.events.length === 0) {
+    status.className = "stack";
+    status.innerHTML = noResults();
+  }
   else if ((state.totalCount > 0 && state.offset >= state.totalCount) || state.offset >= MAX_RESULTS)
     status.textContent = "Tu as tout vu !";
   else status.textContent = "";

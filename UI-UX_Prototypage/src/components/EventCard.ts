@@ -4,7 +4,7 @@ import { asText, escapeHtml } from "../utils/html.ts";
 import { icon } from "../utils/icons.ts";
 import { eventImage, img } from "../utils/images.ts";
 
-export interface EventCardOptions {
+interface EventCardOptions {
   saved?: boolean;
   liked?: boolean;
   /** Carte non cliquable (page détail). */

@@ -44,6 +44,7 @@ export interface LocalUser {
   handle: string;
   email: string;
   avatar?: AvatarId;
+  provider?: "password" | "google";
 }
 
 export interface Ticket {
@@ -72,6 +73,8 @@ export interface CommunityComment {
 
 export interface CommunityPost {
   id: string;
+  /** Identifiant du compte auteur (absent pour les posts de démonstration). */
+  authorId?: string;
   author: string;
   avatar: string;
   text: string;

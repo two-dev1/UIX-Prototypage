@@ -2,7 +2,7 @@
  * Design tokens OUTRS — source : Figma « 01. Foundations & Tokens » et « 04.Final screens ».
  * Un seul thème : sombre. Aucune variante claire.
  */
-@layer tokens, base, layout, components, utilities;
+@layer tokens, base, layout, components, responsive, utilities;
 
 @layer tokens {
   :root {
@@ -37,9 +37,7 @@
     --color-text-muted: var(--palette-grey-light);
     --color-field: var(--palette-white);
     --color-on-field: var(--palette-black);
-    --color-placeholder: var(--palette-grey-light);
     --color-avatar: #add72c;
-    --color-photo-placeholder: #928585;
     --color-scrim: rgb(0 0 0 / 0.7);
     --color-scrim-light: rgb(0 0 0 / 0.4);
     --color-focus: var(--palette-lime);

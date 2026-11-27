@@ -28,6 +28,7 @@ import {
 } from "../utils/events.ts";
 import { asText, escapeHtml } from "../utils/html.ts";
 import { icon } from "../utils/icons.ts";
+import { sanitizeRichText } from "../utils/richText.ts";
 import { eventImage } from "../utils/images.ts";
 import { createMapLinks } from "../utils/maps.ts";
 
@@ -58,6 +59,12 @@ export function renderEventDetail(id: string): void {
         target.setAttribute("aria-pressed", String(followed));
       },
       retry: () => renderEventDetail(id),
+      "toggle-description": (target) => {
+        const text = root.querySelector("#event-description");
+        const collapsed = text?.classList.toggle("is-collapsed") ?? false;
+        target.textContent = collapsed ? "Lire la suite" : "Réduire";
+        target.setAttribute("aria-expanded", String(!collapsed));
+      },
     },
   );
 
@@ -92,7 +99,9 @@ function fill(event: ParisEvent): void {
   if (!host) return;
   const id = asText(event.id);
   const address = getEventAddress(event);
-  const description = toPlainText(event.description) || toPlainText(event.lead_text) || "Description bientôt disponible.";
+  const description =
+    sanitizeRichText(event.description) || sanitizeRichText(event.lead_text) || "<p>Description bientôt disponible.</p>";
+  const isLong = description.length > 900;
   const organizer = asText(event.address_name) || "Organisateur Paris";
   const followed = getFollowedOrganizers().includes(organizer);
   const url = asText(event.url);
@@ -101,7 +110,8 @@ function fill(event: ParisEvent): void {
     <button type="button" class="button button--primary button--block" data-action="reserve">Réserver</button>
     <div class="stack stack--16">
       <p class="caption lime">${escapeHtml(event.date_start ? formatLongDate(event.date_start) : toPlainText(event.date_description) || "Dates à venir")}</p>
-      <p class="body">${escapeHtml(description)}</p>
+      <div class="rich${isLong ? " is-collapsed" : ""}" id="event-description">${description}</div>
+      ${isLong ? `<button type="button" class="link self-start" data-action="toggle-description" aria-expanded="false" aria-controls="event-description">Lire la suite</button>` : ""}
     </div>
     <div class="stack stack--12">
       ${

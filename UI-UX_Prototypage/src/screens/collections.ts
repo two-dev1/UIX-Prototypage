@@ -6,6 +6,7 @@ import { AppScreen, TopBar, chromeActions } from "../components/chrome.ts";
 import { EventCard, EventCardSkeleton } from "../components/EventCard.ts";
 import { cacheEvents, eventCache, eventCardActions } from "../components/eventActions.ts";
 import { navigate } from "../router.ts";
+import { activeCategory } from "./home.ts";
 import { getFavorites, getLikedEvents } from "../store.ts";
 import type { ParisEvent } from "../types.ts";
 import { CATEGORIES } from "../utils/events.ts";
@@ -69,7 +70,7 @@ export function renderFavorites(): void {
 }
 
 export function renderCategories(): void {
-  const current = sessionStorage.getItem("outrs-active-category") ?? "";
+  const current = activeCategory();
   mountScreen(
     AppScreen(
       `${TopBar("Catégories")}
@@ -92,7 +93,6 @@ export function renderCategories(): void {
       pick: (target) => {
         const id = target.dataset.id ?? "";
         sessionStorage.setItem("outrs-category", id);
-        sessionStorage.setItem("outrs-active-category", id);
         navigate("/home");
       },
     },

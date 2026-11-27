@@ -10,7 +10,7 @@ import { icon } from "./utils/icons.ts";
 
 export const root = requireElement(document, "#app", isHtmlElement);
 
-export type ActionHandler = (target: HTMLElement, event: Event) => void;
+type ActionHandler = (target: HTMLElement, event: Event) => void;
 export type ActionMap = Record<string, ActionHandler>;
 
 let screenController = new AbortController();
@@ -56,7 +56,7 @@ const overlayRoot = document.createElement("div");
 overlayRoot.className = "overlay-root";
 document.body.append(overlayRoot);
 
-export interface OverlayOptions {
+interface OverlayOptions {
   variant?: "sheet" | "center" | "top" | "full" | "dark";
   label: string;
   actions?: ActionMap;
@@ -169,6 +169,11 @@ export function rememberReturnPath(path = currentPath()): void {
   sessionStorage.setItem(RETURN_KEY, path);
 }
 
+/** Lit l'écran de retour sans le consommer (conservé pendant la redirection Google). */
+export function peekReturnPath(fallback = "/home"): string {
+  return sessionStorage.getItem(RETURN_KEY) ?? fallback;
+}
+
 export function consumeReturnPath(fallback = "/home"): string {
   const path = sessionStorage.getItem(RETURN_KEY);
   sessionStorage.removeItem(RETURN_KEY);
@@ -182,39 +187,41 @@ export function requireAuth(returnPath?: string): boolean {
   return false;
 }
 
-export function openAuthGate(returnPath?: string): void {
-  openOverlay(
-    `<section class="fullscreen">
+/** Page « Rejoins les Outers » : écran d'entrée et portail des actions engageantes. */
+export function JoinPanel(options: { back: boolean }): string {
+  return `<section class="fullscreen">
       <div class="fullscreen__head">
-        <button type="button" class="icon-button" data-action="close" aria-label="Retour">${icon("back")}</button>
+        ${options.back ? `<button type="button" class="icon-button" data-action="close" aria-label="Retour">${icon("back")}</button>` : ""}
         <span class="logo" aria-label="OUTRS" role="img">${icon("logo-text")}</span>
       </div>
       <div class="stack stack--16">
         <span class="logo-75" aria-hidden="true">${icon("logo-75")}</span>
-        <h2 class="display">Rejoins les Outers.</h2>
+        <h1 class="display">Rejoins les Outers.</h1>
         <p class="body">Connecte-toi ou crée ton compte pour réserver, poster, commenter, liker et enregistrer tes sorties.</p>
       </div>
       <div class="stack stack--12">
         <button type="button" class="button button--primary button--block" data-action="gate-login">Se connecter</button>
         <button type="button" class="button button--secondary button--block" data-action="gate-register">Créer un compte</button>
-        <button type="button" class="button button--ghost button--block button--label" data-action="close">Continuer en invité</button>
+        <button type="button" class="button button--ghost button--block button--label" data-action="${options.back ? "close" : "guest"}">Continuer en invité</button>
       </div>
-    </section>`,
-    {
-      variant: "full",
-      label: "Connexion requise",
-      actions: {
-        "gate-login": () => {
-          rememberReturnPath(returnPath);
-          navigate("/auth/login");
-        },
-        "gate-register": () => {
-          rememberReturnPath(returnPath);
-          navigate("/auth/register");
-        },
+    </section>`;
+}
+
+export function openAuthGate(returnPath?: string): void {
+  openOverlay(JoinPanel({ back: true }), {
+    variant: "full",
+    label: "Connexion requise",
+    actions: {
+      "gate-login": () => {
+        rememberReturnPath(returnPath);
+        navigate("/auth/login");
+      },
+      "gate-register": () => {
+        rememberReturnPath(returnPath);
+        navigate("/auth/register");
       },
     },
-  );
+  });
 }
 
 /* ---------- Images : repli automatique ---------- */

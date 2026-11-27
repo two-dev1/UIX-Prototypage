@@ -3,6 +3,18 @@
 Source : fichier Figma « Prototype », page **04.Final screens** (+ « 01. Foundations & Tokens » et la Bibliothèque UI en PDF).
 Thème unique : **sombre**. Mise en page **100 % flexbox** (aucun `display: block` ni `grid`). Référence mobile 390 px, marges 20 px.
 
+## Responsive (un seul balisage, mise en page en CSS)
+
+| Largeur        | Mise en page                                                                 |
+| -------------- | ---------------------------------------------------------------------------- |
+| < 768 px       | Mobile : barre du haut (+ / titre / recherche) et navigation basse en pilule |
+| 768 – 1279 px  | Tablette : navigation gauche en icônes, fil central 600 px                   |
+| ≥ 1280 px      | Desktop façon X : nav gauche complète (Publier, compte), fil central 600 px, panneau droit (recherche permanente, lives, catégories, prochains billets) |
+
+Les feuilles du bas deviennent des boîtes de dialogue centrées à partir de 768 px.
+Styles : `src/styles/responsive.css` (couche `responsive`, prioritaire sur `components`).
+Composants : `SideNav`, `SidePanel` et `AppScreen` dans `src/components/chrome.ts`.
+
 ## Arborescence
 
 | Dossier / fichier            | Rôle                                                                 |
@@ -15,7 +27,7 @@ Thème unique : **sombre**. Mise en page **100 % flexbox** (aucun `display: bloc
 | `src/components/`            | Composants HTML (cartes, barres, feuilles, live, stickers…)          |
 | `src/screens/`               | Un fichier par groupe d'écrans Figma                                 |
 | `src/utils/`                 | Icônes, images de repli, formatage d'événements, cartes, échappement |
-| `src/styles/`                | `@layer tokens, base, layout, components, utilities`                 |
+| `src/styles/`                | `@layer tokens, base, layout, components, responsive, utilities`     |
 | `src/assets/icons/`          | SVG Figma (inlinés et recolorables)                                  |
 | `src/assets/shapes/`         | Formes OUTRS utilisées comme masques d'image                         |
 
@@ -24,9 +36,9 @@ Thème unique : **sombre**. Mise en page **100 % flexbox** (aucun `display: bloc
 | Figma                     | Route                  | Fichier                    |
 | ------------------------- | ---------------------- | -------------------------- |
 | Loading                   | (splash au démarrage)  | `screens/onboarding.ts`    |
-| CTA                       | `#/welcome`            | `screens/onboarding.ts`    |
-| Login choice              | `#/start`              | `screens/onboarding.ts`    |
-| Register / Login          | `#/auth/register|login`| `screens/onboarding.ts`    |
+| Rejoins les Outers        | `#/start`              | `screens/onboarding.ts`    |
+| Register / Login          | `#/auth/register|login|forgot|reset` | `screens/onboarding.ts` |
+| Tutoriel                  | `#/tutorial`           | `screens/onboarding.ts`    |
 | Home / Search             | `#/home`               | `screens/home.ts`          |
 | Detail / Pop up sticker   | `#/event/:id`          | `screens/eventDetail.ts`   |
 | Reservations              | `#/tickets`            | `screens/tickets.ts`       |
@@ -52,6 +64,21 @@ Thème unique : **sombre**. Mise en page **100 % flexbox** (aucun `display: bloc
 | Hauteur bouton              | `--size-button`         | 65 px     |
 
 Polices : Anton (Display, capitales) et Plus Jakarta Sans (UI), importées dans `index.html`.
+
+## Authentification (Supabase)
+
+- Client : `src/supabase.ts` (clé **publique** uniquement, flux PKCE). Logique : `src/auth.ts`.
+- Variables : `.env.local` (non commité) — modèle dans `.env.example` :
+  `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`. À renseigner aussi chez l'hébergeur.
+- Schéma : `supabase/schema.sql` (table `profiles`, RLS « chacun son profil », trigger de création à l'inscription).
+- Réglages Supabase : Authentication → Email → « Confirm email » désactivé (connexion immédiate) ;
+  Authentication → URL Configuration → Site URL + Redirect URLs = adresse de l'app (lien « mot de passe oublié »).
+- Écrans : `#/auth/login`, `#/auth/register`, `#/auth/forgot`, `#/auth/reset`.
+- Google : OAuth via Supabase (`signInWithOAuth`), retour sur l'app avec `?code=` échangé au démarrage ;
+  Google Cloud → client Web, URI de redirection `https://<projet>.supabase.co/auth/v1/callback` ;
+  Supabase → Redirect URLs doit contenir l'adresse de l'app (`http://localhost:5173/**` en local).
+- Apple : non configuré (message « bientôt disponible », compte Apple Developer payant requis).
+- Favoris, billets, stickers et posts restent dans le navigateur (localStorage).
 
 ## Mode invité
 

@@ -1,9 +1,11 @@
 /** Profil, Modifier le profil, Collection d'Outs (Figma « Profile », « Modifier le profil », « Outs collection »). */
-import { logoutUser, updateProfile } from "../auth.ts";
+import { changePassword, logoutUser, updateProfile } from "../auth.ts";
 import { mountScreen, openAuthGate, requireAuth, toast } from "../app.ts";
 import { AppScreen, TopBar, chromeActions } from "../components/chrome.ts";
 import { openComments } from "../components/CommentsSheet.ts";
 import { PostCard } from "../components/PostCard.ts";
+import { postActions } from "../components/postActions.ts";
+import { openSheet } from "../components/Sheet.ts";
 import { OUTS_CATALOG, Sticker } from "../components/Sticker.ts";
 import { navigate } from "../router.ts";
 import { getCurrentUser, getFollowedOrganizers, getOuts, getPosts, getScore, getTickets } from "../store.ts";
@@ -22,7 +24,7 @@ function Identity(name: string, handle: string): string {
 export function renderProfile(): void {
   const user = getCurrentUser();
   const outs = getOuts();
-  const myPosts = user ? getPosts().filter((post) => post.author === user.name) : [];
+  const myPosts = user ? getPosts().filter((post) => post.authorId === user.id) : [];
   const score = getScore();
   const level = score >= 300 ? 3 : score >= 100 ? 2 : 1;
 
@@ -61,7 +63,15 @@ export function renderProfile(): void {
             ? `<ul class="feed feed--32">${myPosts.slice(0, 2).map((post) => `<li>${PostCard(post)}</li>`).join("")}</ul>`
             : `<div class="empty"><p class="body">Aucun post publié.</p><button type="button" class="button button--secondary button--label" data-action="create">Publier une photo</button></div>`
         }
-      </section>`,
+      </section>
+      ${
+        user
+          ? `<section class="stack stack--12" aria-labelledby="account-title">
+              <h3 id="account-title" class="h2">Compte</h3>
+              <button type="button" class="button button--outline button--block button--label" data-action="logout">${icon("logout")} Se déconnecter</button>
+            </section>`
+          : ""
+      }`,
       "profile",
     ),
     {
@@ -74,9 +84,28 @@ export function renderProfile(): void {
       outs: () => navigate("/outs"),
       "all-posts": () => navigate("/community"),
       "open-comments": (target) => openComments(target.dataset.id ?? "", () => undefined),
-      "like-post": () => navigate("/community"),
-      "save-post": () => navigate("/community"),
-      "share-post": () => navigate("/community"),
+      ...postActions(),
+      logout: confirmLogout,
+    },
+  );
+}
+
+/** Déconnexion avec confirmation : les données locales (billets, favoris, outs) restent sur l'appareil. */
+function confirmLogout(): void {
+  const sheet = openSheet(
+    "Se déconnecter ?",
+    `<p class="body">Tes billets, favoris et stickers restent enregistrés sur cet appareil.</p>`,
+    {
+      footer: `<button type="button" class="button button--primary button--block" data-action="confirm-logout">Se déconnecter</button>
+        <button type="button" class="button button--ghost button--block button--label" data-action="close">Annuler</button>`,
+      actions: {
+        "confirm-logout": async () => {
+          sheet.close();
+          await logoutUser().catch(() => undefined);
+          toast("Tu es déconnecté·e");
+          navigate("/start", { replace: true });
+        },
+      },
     },
   );
 }
@@ -89,6 +118,7 @@ export function renderProfileEdit(): void {
     return;
   }
   let avatar: AvatarId = user.avatar ?? "avatar-1";
+  const isOAuth = user.provider === "google";
   const signal = mountScreen(
     AppScreen(
       `${TopBar("Modifier le profil", { left: "back", search: false })}
@@ -109,7 +139,15 @@ export function renderProfileEdit(): void {
           <label class="inline-field"><span class="inline-field__label">Pseudonyme</span><input class="inline-field__input" name="handle" value="${escapeHtml(user.handle)}" placeholder="Nickname" autocomplete="nickname"></label>
           <label class="inline-field"><span class="inline-field__label">Nom de profil</span><input class="inline-field__input" name="name" value="${escapeHtml(user.name)}" placeholder="Nom de profil" autocomplete="name"></label>
         </div>
-        <div class="stack stack--16">
+        ${
+          isOAuth
+            ? `<div class="stack stack--8 stack--center">
+                <p class="h2 lime center">Compte Google</p>
+                <p class="body center">${escapeHtml(user.email)}</p>
+                <p class="caption muted center">L’adresse mail et la sécurité du compte se gèrent depuis ton compte Google.</p>
+              </div>
+              <div class="stack stack--16">`
+            : `<div class="stack stack--16">
           <p class="h2 lime center">Adresse mail &amp; Mot de passe</p>
           <div class="stack stack--40">
             <div class="stack stack--12">
@@ -120,7 +158,9 @@ export function renderProfileEdit(): void {
               <input class="field field--outline" name="password" type="password" placeholder="Mot de passe" autocomplete="new-password" aria-label="Mot de passe">
               <input class="field field--outline" name="password2" type="password" placeholder="Mot de passe (confirmation)" autocomplete="new-password" aria-label="Confirmation du mot de passe">
             </div>
-          </div>
+            <input class="field field--outline" name="currentPassword" type="password" placeholder="Mot de passe actuel (requis pour e-mail ou mot de passe)" autocomplete="current-password" aria-label="Mot de passe actuel">
+          </div>`
+        }
           <p class="form-error" data-error hidden></p>
         </div>
         <div class="stack stack--12 stack--center">
@@ -140,33 +180,45 @@ export function renderProfileEdit(): void {
           option.setAttribute("aria-checked", String(selected));
         });
       },
-      logout: () => {
-        logoutUser();
-        toast("Tu es déconnecté·e");
-        navigate("/start", { replace: true });
-      },
+      logout: confirmLogout,
     },
   );
 
   const form = document.querySelector<HTMLFormElement>("#profile-form");
   form?.addEventListener(
     "submit",
-    (event) => {
+    async (event) => {
       event.preventDefault();
       const data = new FormData(form);
       const value = (key: string): string => String(data.get(key) ?? "").trim();
       const error = form.querySelector<HTMLElement>("[data-error]");
+      const submit = form.querySelector<HTMLButtonElement>("button[type='submit']");
       const fail = (message: string): void => {
         if (error) {
           error.hidden = false;
           error.textContent = message;
         }
       };
-      if (value("email2") && value("email") !== value("email2")) return fail("Les adresses mail ne correspondent pas.");
-      if (value("password") && value("password") !== value("password2")) return fail("Les mots de passe ne correspondent pas.");
-      updateProfile({ name: value("name"), handle: value("handle"), email: value("email"), avatar });
-      toast("Profil mis à jour");
-      navigate("/profile", { replace: true });
+      const email = isOAuth ? "" : value("email");
+      const password = String(data.get("password") ?? "");
+      const currentPassword = String(data.get("currentPassword") ?? "");
+      const emailChanged = email !== "" && email !== user.email;
+      if (value("email2") && email !== value("email2")) return fail("Les adresses mail ne correspondent pas.");
+      if (password && password !== String(data.get("password2") ?? "")) return fail("Les mots de passe ne correspondent pas.");
+      if (password && password.length < 8) return fail("Le nouveau mot de passe doit contenir au moins 8 caractères.");
+      if ((emailChanged || password) && user.provider === "password" && !currentPassword)
+        return fail("Indique ton mot de passe actuel pour modifier l’e-mail ou le mot de passe.");
+
+      if (submit) submit.disabled = true;
+      try {
+        await updateProfile({ name: value("name"), handle: value("handle"), email, avatar, currentPassword });
+        if (password) await changePassword(currentPassword, password);
+        toast("Profil mis à jour");
+        navigate("/profile", { replace: true });
+      } catch (caught) {
+        fail(caught instanceof Error ? caught.message : "Mise à jour impossible.");
+        if (submit) submit.disabled = false;
+      }
     },
     { signal },
   );
