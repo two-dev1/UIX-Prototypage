@@ -318,7 +318,7 @@
   .chip--icon { width: 82px; padding: 0; }
   .chip--icon .icon { width: 18px; height: 22px; }
 
-  /* ---------- Médias masqués (formes OUTRS) ---------- */
+  /* ---------- Médias masqués (formes OUT75) ---------- */
   .media {
     display: flex;
     position: relative;

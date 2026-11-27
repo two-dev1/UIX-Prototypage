@@ -13,7 +13,7 @@ import { goBack, navigate, type AuthMode } from "../router.ts";
 import { isTutorialDone, setGuestSession, setTutorialDone } from "../store.ts";
 import { icon, iconSvg, type IconName } from "../utils/icons.ts";
 
-const Logo = `<span class="logo" role="img" aria-label="OUTRS">${icon("logo-text")}</span>`;
+const Logo = `<span class="logo" role="img" aria-label="OUT75">${icon("logo-text")}</span>`;
 
 /** Écran « Loading » : tracé lime du logo 75, affiché au démarrage. */
 export function showSplash(): Promise<void> {
@@ -68,7 +68,7 @@ export function renderTutorial(): void {
         ${Logo}
         <button type="button" class="button button--ghost button--label tutorial__skip" data-action="skip">Passer</button>
       </div>
-      <div class="tutorial__track" data-track aria-roledescription="carrousel" aria-label="Découvrir OUTRS">
+      <div class="tutorial__track" data-track aria-roledescription="carrousel" aria-label="Découvrir OUT75">
         ${SLIDES.map(
           (slide, position) => `<section class="tutorial__slide" aria-roledescription="diapositive" aria-label="${position + 1} sur ${SLIDES.length}">
             <span class="tutorial__visual${slide.visual === "logo-75" ? " tutorial__visual--wide" : ""}" aria-hidden="true">${iconSvg(slide.visual)}</span>

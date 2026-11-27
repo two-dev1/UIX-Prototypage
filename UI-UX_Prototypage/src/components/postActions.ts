@@ -31,7 +31,7 @@ export function postActions(): ActionMap {
       const id = target.dataset.id ?? "";
       const url = `${location.origin}${location.pathname}#/share/${encodeURIComponent(id)}`;
       try {
-        if (navigator.share) await navigator.share({ title: "Post OUTRS", url });
+        if (navigator.share) await navigator.share({ title: "Post OUT75", url });
         else {
           await navigator.clipboard.writeText(url);
           toast("Lien du post copié");

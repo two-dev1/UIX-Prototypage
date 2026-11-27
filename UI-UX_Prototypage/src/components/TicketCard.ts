@@ -12,7 +12,7 @@ export function ticketQr(ticket: Ticket, variant: "card" | "large" = "card"): st
   const key = `${ticket.id}-${variant}`;
   const cached = qrCache.get(key);
   if (cached) return cached;
-  const svg = renderSVG(`OUTRS:${ticket.id}:${ticket.eventId}:x${ticket.quantity}`, {
+  const svg = renderSVG(`OUT75:${ticket.id}:${ticket.eventId}:x${ticket.quantity}`, {
     border: variant === "large" ? 1 : 0,
     blackColor: variant === "large" ? "#151515" : "#B8E62E",
     whiteColor: variant === "large" ? "#FEFEFE" : "transparent",

@@ -1,4 +1,4 @@
-# Intégration Figma — OUTRS
+# Intégration Figma — OUT75
 
 Source : fichier Figma « Prototype », page **04.Final screens** (+ « 01. Foundations & Tokens » et la Bibliothèque UI en PDF).
 Thème unique : **sombre**. Mise en page **100 % flexbox** (aucun `display: block` ni `grid`). Référence mobile 390 px, marges 20 px.
@@ -29,7 +29,7 @@ Composants : `SideNav`, `SidePanel` et `AppScreen` dans `src/components/chrome.t
 | `src/utils/`                 | Icônes, images de repli, formatage d'événements, cartes, échappement |
 | `src/styles/`                | `@layer tokens, base, layout, components, responsive, utilities`     |
 | `src/assets/icons/`          | SVG Figma (inlinés et recolorables)                                  |
-| `src/assets/shapes/`         | Formes OUTRS utilisées comme masques d'image                         |
+| `src/assets/shapes/`         | Formes OUT75 utilisées comme masques d'image                         |
 
 ## Correspondance écrans Figma → routes
 

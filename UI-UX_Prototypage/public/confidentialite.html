@@ -4,97 +4,186 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#151515" />
-    <title>Politique de confidentialité — OUTRS</title>
-    <meta name="description" content="Données collectées par OUTRS, finalités et droits des utilisateurs." />
+    <title>Politique de confidentialité — OUT75</title>
+    <meta name="description" content="Politique de confidentialité d’OUT75 : données collectées, utilisation des données Google, conservation, partage, sécurité et droits des utilisateurs." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="/legal.css" />
   </head>
   <body>
     <main>
       <header>
-        <a class="back" href="/">← Retour à OUTRS</a>
+        <a class="back" href="/a-propos.html">← OUT75</a>
         <h1>Politique de confidentialité</h1>
-        <p class="muted">Dernière mise à jour : 27 novembre 2026</p>
+        <p class="muted">Dernière mise à jour : 27 novembre 2026 · Application : OUT75 (https://out75.netlify.app)</p>
       </header>
 
       <section>
+        <h2>1. Qui sommes-nous</h2>
         <p>
-          OUTRS est une application web qui recense les sorties culturelles à Paris à partir des
-          données ouvertes de la Ville de Paris (« Que faire à Paris »). Cette page explique quelles
-          données sont utilisées, pourquoi, et comment les supprimer.
+          OUT75 est une application web gratuite qui aide à trouver quoi faire à Paris (concerts,
+          expositions, théâtre, cinéma, sorties gratuites) à partir des données ouvertes « Que faire à
+          Paris » de la Ville de Paris. Le responsable du traitement des données est l’éditeur d’OUT75,
+          joignable à l’adresse <a href="mailto:a_mmadi@stu-lisaa.com">a_mmadi@stu-lisaa.com</a>.
+        </p>
+        <p>
+          Cette politique explique quelles données nous collectons, pourquoi, comment nous les utilisons,
+          avec qui elles sont partagées, combien de temps elles sont conservées et comment exercer tes droits.
         </p>
       </section>
 
       <section>
-        <h2>Données collectées</h2>
+        <h2>2. Données que nous collectons</h2>
         <ul>
-          <li><strong>Compte</strong> : adresse e-mail, nom d’utilisateur, pseudonyme et avatar choisi.</li>
           <li>
-            <strong>Connexion avec Google</strong> : nom et adresse e-mail transmis par Google. OUTRS ne
-            reçoit jamais ton mot de passe Google et n’accède à aucune autre donnée de ton compte.
+            <strong>Données de compte</strong> (si tu crées un compte) : adresse e-mail, nom d’utilisateur,
+            pseudonyme, avatar choisi parmi ceux proposés, date de création du compte.
           </li>
           <li>
-            <strong>Mot de passe</strong> (inscription par e-mail) : géré par notre fournisseur
-            d’authentification, stocké uniquement sous forme chiffrée (hachée).
+            <strong>Mot de passe</strong> (inscription par e-mail) : jamais stocké en clair ; il est
+            conservé uniquement sous forme hachée par notre fournisseur d’authentification (Supabase).
           </li>
           <li>
-            <strong>Sur ton appareil uniquement</strong> : favoris, billets (réservations simulées),
-            stickers, publications et photos sont enregistrés dans le stockage local de ton navigateur.
-            Ils ne sont pas envoyés sur nos serveurs.
+            <strong>Données issues de Google</strong> (si tu choisis « Continuer avec Google ») : voir la
+            section 3.
           </li>
           <li>
-            <strong>Caméra</strong> : utilisée seulement quand tu prends une photo pour publier ; l’image
-            reste sur ton appareil.
+            <strong>Données techniques de session</strong> : un jeton de connexion enregistré dans ton
+            navigateur pour te garder connecté.
+          </li>
+          <li>
+            <strong>Données stockées uniquement sur ton appareil</strong> (stockage local du navigateur,
+            jamais envoyées à nos serveurs) : favoris, réservations de démonstration, stickers, score,
+            publications, photos et commentaires.
+          </li>
+          <li>
+            <strong>Caméra</strong> : utilisée seulement lorsque tu prends une photo pour publier ; l’image
+            reste sur ton appareil. L’accès à la caméra n’est demandé qu’à ce moment-là.
+          </li>
+        </ul>
+        <p>Nous ne collectons ni données bancaires (les paiements sont simulés), ni localisation, ni contacts.</p>
+      </section>
+
+      <section>
+        <h2>3. Utilisation des données Google</h2>
+        <p>Si tu te connectes avec Google, OUT75 demande uniquement les autorisations de base :</p>
+        <ul>
+          <li><code>openid</code> : t’identifier de façon sécurisée ;</li>
+          <li><code>email</code> : ton adresse e-mail Google ;</li>
+          <li><code>profile</code> : ton nom (et l’adresse de ta photo de profil, que nous n’utilisons pas).</li>
+        </ul>
+        <p>Ces données servent <strong>uniquement</strong> à :</p>
+        <ul>
+          <li>créer ton compte OUT75 et te connecter ;</li>
+          <li>afficher ton nom et ton pseudonyme dans ton profil.</li>
+        </ul>
+        <p>
+          OUT75 n’accède à aucune autre donnée de ton compte Google (Gmail, Drive, Agenda, contacts, etc.),
+          ne reçoit jamais ton mot de passe Google, ne vend pas ces données, ne les utilise pas à des fins
+          publicitaires et ne les transmet à aucun tiers en dehors du fournisseur d’authentification
+          (Supabase) nécessaire au fonctionnement de la connexion.
+        </p>
+        <p>
+          L’utilisation et le transfert des informations reçues des API Google respectent les
+          <a href="https://developers.google.com/terms/api-services-user-data-policy" rel="noopener">Règles
+          relatives aux données utilisateur des services d’API Google</a>, y compris les exigences
+          d’utilisation limitée (« Limited Use »).
+        </p>
+        <p>
+          Tu peux retirer à tout moment l’accès d’OUT75 à ton compte Google depuis
+          <a href="https://myaccount.google.com/permissions" rel="noopener">myaccount.google.com/permissions</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>4. Pourquoi nous utilisons ces données (base légale)</h2>
+        <ul>
+          <li>Fournir le service demandé (création de compte, connexion, profil) : exécution du service.</li>
+          <li>Sécuriser les comptes (limitation des tentatives, sessions) : intérêt légitime.</li>
+        </ul>
+        <p>Aucune publicité, aucun profilage, aucune revente de données.</p>
+      </section>
+
+      <section>
+        <h2>5. Partage des données et sous-traitants</h2>
+        <ul>
+          <li><strong>Supabase</strong> : authentification et base de données des profils (sous-traitant).</li>
+          <li><strong>Google</strong> : uniquement si tu choisis la connexion Google.</li>
+          <li><strong>Netlify</strong> : hébergement du site (journaux techniques d’accès).</li>
+          <li>
+            <strong>OpenData Paris, Unsplash, Google Fonts</strong> : chargement des événements, d’images
+            d’illustration et des polices ; ces services reçoivent l’adresse IP de ton navigateur lors du chargement.
+          </li>
+        </ul>
+        <p>Nous ne partageons pas tes données avec d’autres tiers, sauf obligation légale.</p>
+      </section>
+
+      <section>
+        <h2>6. Conservation et suppression</h2>
+        <ul>
+          <li>Les données de compte sont conservées tant que ton compte existe.</li>
+          <li>
+            Pour supprimer ton compte et toutes les données associées (profil, e-mail, données Google),
+            écris à <a href="mailto:a_mmadi@stu-lisaa.com">a_mmadi@stu-lisaa.com</a> depuis l’adresse du
+            compte : la suppression est effectuée sous 30 jours au plus.
+          </li>
+          <li>
+            Les données stockées sur ton appareil s’effacent en te déconnectant et en vidant les données
+            du site dans les réglages de ton navigateur.
           </li>
         </ul>
       </section>
 
       <section>
-        <h2>Finalités</h2>
-        <ul>
-          <li>Créer ton compte et te permettre de te connecter.</li>
-          <li>Afficher ton profil (nom, pseudonyme, avatar) dans l’application.</li>
-        </ul>
+        <h2>7. Sécurité</h2>
         <p>
-          Aucune publicité, aucune revente de données, aucun suivi publicitaire. Les paiements sont
-          simulés : aucune donnée bancaire n’est demandée ni enregistrée.
+          Les échanges sont chiffrés (HTTPS). Les mots de passe sont hachés. L’accès aux profils est
+          protégé par des règles de sécurité au niveau de la base de données : chaque utilisateur ne peut
+          lire et modifier que son propre profil.
         </p>
       </section>
 
       <section>
-        <h2>Services tiers</h2>
-        <ul>
-          <li><strong>Supabase</strong> : authentification et stockage du profil.</li>
-          <li><strong>Google</strong> : connexion avec un compte Google (si tu la choisis).</li>
-          <li><strong>Netlify</strong> : hébergement du site.</li>
-          <li>
-            <strong>OpenData Paris</strong>, <strong>Unsplash</strong> et <strong>Google Fonts</strong> :
-            chargement des événements, d’images d’illustration et des polices.
-          </li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>Durée de conservation et suppression</h2>
+        <h2>8. Tes droits</h2>
         <p>
-          Les données du compte sont conservées tant que le compte existe. Tu peux demander la
-          suppression de ton compte et de ton profil à tout moment à l’adresse ci-dessous. Les données
-          enregistrées sur ton appareil s’effacent en vidant les données du site dans ton navigateur.
+          Conformément au RGPD, tu disposes d’un droit d’accès, de rectification, d’effacement, de
+          limitation, d’opposition et de portabilité de tes données. Ton nom, ton pseudonyme et ton avatar
+          sont modifiables directement dans l’application (Profil → Modifier). Pour toute autre demande,
+          contacte-nous. Tu peux aussi adresser une réclamation à la CNIL (www.cnil.fr).
         </p>
       </section>
 
       <section>
-        <h2>Tes droits</h2>
+        <h2>9. Mineurs</h2>
+        <p>OUT75 n’est pas destiné aux enfants de moins de 15 ans, qui ne doivent pas créer de compte.</p>
+      </section>
+
+      <section>
+        <h2>10. Modifications</h2>
         <p>
-          Conformément au RGPD, tu disposes d’un droit d’accès, de rectification, d’effacement et
-          d’opposition sur tes données. Ton nom, ton pseudonyme et ton avatar sont modifiables
-          directement dans l’application (Profil → Modifier).
+          Cette politique peut évoluer ; la date de mise à jour figure en haut de la page. En cas de
+          changement important, une information sera affichée dans l’application.
         </p>
       </section>
 
       <section class="card">
         <h2>Contact</h2>
-        <p>Pour toute question ou demande liée à tes données : <a href="mailto:a_mmadi@stu-lisaa.com">a_mmadi@stu-lisaa.com</a></p>
+        <p>Questions, demandes d’accès ou de suppression : <a href="mailto:a_mmadi@stu-lisaa.com">a_mmadi@stu-lisaa.com</a></p>
+      </section>
+
+      <section lang="en">
+        <h2>English summary</h2>
+        <p>
+          OUT75 helps people find cultural events in Paris using the City of Paris open data. If you sign
+          in with Google, OUT75 only requests the basic scopes (openid, email, profile) and uses your name
+          and email address solely to create your account and display your profile. We do not access any
+          other Google data, do not sell your data, do not use it for advertising and do not share it with
+          third parties other than our authentication provider (Supabase). OUT75’s use and transfer of
+          information received from Google APIs adheres to the
+          <a href="https://developers.google.com/terms/api-services-user-data-policy" rel="noopener">Google
+          API Services User Data Policy</a>, including the Limited Use requirements. Favorites, demo
+          tickets, posts and photos are stored only on your device. To delete your account, email
+          <a href="mailto:a_mmadi@stu-lisaa.com">a_mmadi@stu-lisaa.com</a>.
+        </p>
       </section>
     </main>
   </body>

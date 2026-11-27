@@ -14,7 +14,7 @@ export function cacheEvents(events: ParisEvent[]): void {
 }
 
 export async function shareEvent(event: ParisEvent | undefined): Promise<void> {
-  const title = asText(event?.title) || "Sortie OUTRS";
+  const title = asText(event?.title) || "Sortie OUT75";
   const url = event ? `${location.origin}${location.pathname}#/event/${encodeURIComponent(event.id)}` : location.href;
   const text = event ? `${title} — ${getEventAddress(event)}` : title;
   if (navigator.share) {

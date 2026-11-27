@@ -192,7 +192,7 @@ export function JoinPanel(options: { back: boolean }): string {
   return `<section class="fullscreen">
       <div class="fullscreen__head">
         ${options.back ? `<button type="button" class="icon-button" data-action="close" aria-label="Retour">${icon("back")}</button>` : ""}
-        <span class="logo" aria-label="OUTRS" role="img">${icon("logo-text")}</span>
+        <span class="logo" aria-label="OUT75" role="img">${icon("logo-text")}</span>
       </div>
       <div class="stack stack--16">
         <span class="logo-75" aria-hidden="true">${icon("logo-75")}</span>
@@ -203,7 +203,7 @@ export function JoinPanel(options: { back: boolean }): string {
         <button type="button" class="button button--primary button--block" data-action="gate-login">Se connecter</button>
         <button type="button" class="button button--secondary button--block" data-action="gate-register">Créer un compte</button>
         <button type="button" class="button button--ghost button--block button--label" data-action="${options.back ? "close" : "guest"}">Continuer en invité</button>
-        <p class="caption muted center legal-links">En continuant, tu acceptes les <a href="/conditions.html">conditions d’utilisation</a> et la <a href="/confidentialite.html">politique de confidentialité</a>.</p>
+        <p class="caption muted center legal-links">En continuant, tu acceptes les <a href="/conditions.html">conditions d’utilisation</a> et la <a href="/confidentialite.html">politique de confidentialité</a>. <a href="/a-propos.html">À propos d’OUT75</a></p>
       </div>
     </section>`;
 }

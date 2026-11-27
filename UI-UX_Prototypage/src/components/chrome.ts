@@ -59,7 +59,7 @@ function BottomNav(active: BottomTab | null): string {
 function SideNav(active: BottomTab | null): string {
   const user = getCurrentUser();
   return `<aside class="side-nav" aria-label="Navigation principale">
-    <button type="button" class="side-nav__logo" data-action="nav" data-to="home" aria-label="OUTRS — Accueil">${icon("logo-text")}</button>
+    <button type="button" class="side-nav__logo" data-action="nav" data-to="home" aria-label="OUT75 — Accueil">${icon("logo-text")}</button>
     <nav class="side-nav__links">
       ${TABS.map(
         (tab) => `<button type="button" class="side-nav__link${tab.id === active ? " is-active" : ""}" data-action="nav" data-to="${tab.id}"${tab.id === active ? ' aria-current="page"' : ""}>
