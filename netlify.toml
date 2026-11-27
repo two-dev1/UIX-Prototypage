@@ -1,0 +1,4 @@
+[build]
+  base = "UI-UX_Prototypage"
+  command = "npm run build"
+  publish = "dist"
