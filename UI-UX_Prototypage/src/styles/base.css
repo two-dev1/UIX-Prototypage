@@ -1,92 +1,124 @@
-@font-face {
-  font-family: "Paris Local";
-  src: url("/fonts/paris-local.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 400 900;
-  font-display: swap;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  min-width: 320px;
-  min-height: 100%;
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-}
-
-body {
-  min-width: 320px;
-  min-height: 100dvh;
-  margin: 0;
-  overflow-x: hidden;
-  overflow-wrap: anywhere;
-  padding-top: var(--space-safe-top);
-  padding-right: var(--space-safe-right);
-  padding-left: var(--space-safe-left);
-  font-family: var(--font-sans);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
-  color: #fefefe;
-  background: var(--color-background);
-  color-scheme: dark;
-}
-
-h1,
-h2,
-h3,
-h4 {
-  font-family: var(--font-display);
-  text-transform: uppercase;
-}
-
-[data-theme="dark"] {
-  color-scheme: dark;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-button,
-input,
-textarea,
-select {
-  min-width: var(--touch-target-min);
-  min-height: var(--touch-target-min);
-  font: inherit;
-  font-size: var(--font-size-input);
-  border-radius: var(--radius-pill);
-}
-
-a {
-  color: var(--color-primary);
-}
-
-button,
-a,
-input,
-textarea,
-select {
-  touch-action: manipulation;
-}
-
-:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
+/* Les polices Anton et Plus Jakarta Sans sont importées dans index.html. */
+@layer base {
   *,
   *::before,
   *::after {
-    scroll-behavior: auto !important;
-    animation: none !important;
-    transition: none !important;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    min-width: 320px;
+    background: var(--color-bg);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-width: 320px;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overflow-wrap: anywhere;
+    font-family: var(--font-ui);
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line);
+    color: var(--color-text);
+    background: var(--color-bg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body.is-locked {
+    overflow: hidden;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+    width: 100%;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  img,
+  svg,
+  video {
+    max-width: 100%;
+    flex-shrink: 0;
+  }
+
+  img,
+  video {
+    object-fit: cover;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  button {
+    border: 0;
+    background: none;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: max(var(--text-input-size), 16px);
+  }
+
+  a {
+    color: inherit;
+  }
+
+  fieldset {
+    min-width: 0;
+    border: 0;
+  }
+
+  ul,
+  ol {
+    list-style: none;
+  }
+
+  :focus-visible {
+    outline: var(--outline-focus);
+    outline-offset: 2px;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 1ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

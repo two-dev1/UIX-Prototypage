@@ -1,11 +1,7 @@
 /**
- * Champs réellement affichés, d'après un appel à l'API (limit=20).
- * Il n'existe pas de champ `tags` : le jeu de données expose `qfap_tags`,
- * non utilisé ici.
+ * Champs réellement affichés, d'après un appel à l'API.
+ * `qfap_tags` est une chaîne séparée par « ; » (ex. « Concert;Festival »).
  * Les dates et le texte alternatif de l'image reviennent souvent à null.
- * Les autres textes sont typés `string | null` : ce sont des champs texte
- * OpenData, absents sur certaines fiches même s'ils étaient remplis
- * dans cet échantillon.
  */
 export interface ParisEvent {
   id: string;
@@ -23,9 +19,9 @@ export interface ParisEvent {
   address_zipcode?: string | null;
   lat_lon?: unknown;
   price_type: string | null;
+  price_detail?: string | null;
   url: string | null;
   qfap_tags?: string[] | string | null;
-  tags?: string[] | string | null;
 }
 
 export interface ApiResponse {
@@ -40,11 +36,14 @@ export interface ApiPage {
 
 export type EventSlot = "Matin" | "Journée" | "Soir";
 
+export type AvatarId = "avatar-1" | "avatar-2";
+
 export interface LocalUser {
   id: string;
   name: string;
   handle: string;
   email: string;
+  avatar?: AvatarId;
 }
 
 export interface Ticket {
@@ -52,6 +51,7 @@ export interface Ticket {
   eventId: string;
   eventTitle: string;
   eventAddress: string;
+  coverUrl?: string | null;
   latitude?: number;
   longitude?: number;
   dateStart: string | null;
@@ -79,7 +79,11 @@ export interface CommunityPost {
   eventTitle: string;
   likes: number;
   liked: boolean;
+  saves?: number;
+  saved?: boolean;
+  shares?: number;
   comments: CommunityComment[];
   createdAt: string;
   challenge: boolean;
+  kind?: "post" | "story";
 }

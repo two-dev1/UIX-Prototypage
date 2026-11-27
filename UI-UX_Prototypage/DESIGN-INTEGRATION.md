@@ -1,78 +1,67 @@
-# Intégration Figma
+# Intégration Figma — OUTRS
 
-## Emplacements à modifier
+Source : fichier Figma « Prototype », page **04.Final screens** (+ « 01. Foundations & Tokens » et la Bibliothèque UI en PDF).
+Thème unique : **sombre**. Mise en page **100 % flexbox** (aucun `display: block` ni `grid`). Référence mobile 390 px, marges 20 px.
 
-- `src/styles/tokens.css` : couleurs, typographie fluide, espacements, rayons, ombres, dimensions fixes et thèmes.
-- `src/styles/base.css` : reset, typographie globale et comportements de formulaire.
-- `src/styles/layout.css` : conteneur, grille et en-tête.
-- `src/styles/components.css` : cartes, boutons et états BEM.
-- `src/styles/utilities.css` : classes transverses.
-- `src/components/` : structure HTML des composants, sans logique métier.
-- `src/utils/html.ts` : échappement centralisé.
-- `src/assets/icons/` : fichiers SVG importés dynamiquement par `icon(name)`.
-- `public/fonts/` : fichiers WOFF2 locaux référencés par `@font-face`.
+## Arborescence
 
-## Procédure Figma vers code
+| Dossier / fichier            | Rôle                                                                 |
+| ---------------------------- | -------------------------------------------------------------------- |
+| `src/main.ts`                | Démarrage, routage, notifications PWA                                |
+| `src/app.ts`                 | Montage d'écran, délégation des clics, overlays, toasts, garde invité |
+| `src/router.ts`              | Routes hash typées, `navigate`, `goBack`                             |
+| `src/api.ts`                 | API OpenData Paris (pagination, recherche, filtres, recherche par id) |
+| `src/store.ts` / `auth.ts`   | Stockage local (favoris, billets, posts, outs) et connexion simulée  |
+| `src/components/`            | Composants HTML (cartes, barres, feuilles, live, stickers…)          |
+| `src/screens/`               | Un fichier par groupe d'écrans Figma                                 |
+| `src/utils/`                 | Icônes, images de repli, formatage d'événements, cartes, échappement |
+| `src/styles/`                | `@layer tokens, base, layout, components, utilities`                 |
+| `src/assets/icons/`          | SVG Figma (inlinés et recolorables)                                  |
+| `src/assets/shapes/`         | Formes OUTRS utilisées comme masques d'image                         |
 
-1. Identifier les composants réutilisables et les états visuels dans Figma.
-2. Ajouter les nouvelles couleurs, tailles et espacements dans `tokens.css` avec un nom sémantique.
-3. Adapter la structure HTML dans le composant concerné.
-4. Ajouter les styles de structure dans `layout.css` et les styles du composant dans `components.css`.
-5. Vérifier à 390 px, puis aux breakpoints documentés 600, 900 et 1200 px.
-6. Exécuter `npm run build` et contrôler les interactions clavier, les zones tactiles et le mode sombre.
+## Correspondance écrans Figma → routes
 
-## Correspondance Figma
+| Figma                     | Route                  | Fichier                    |
+| ------------------------- | ---------------------- | -------------------------- |
+| Loading                   | (splash au démarrage)  | `screens/onboarding.ts`    |
+| CTA                       | `#/welcome`            | `screens/onboarding.ts`    |
+| Login choice              | `#/start`              | `screens/onboarding.ts`    |
+| Register / Login          | `#/auth/register|login`| `screens/onboarding.ts`    |
+| Home / Search             | `#/home`               | `screens/home.ts`          |
+| Detail / Pop up sticker   | `#/event/:id`          | `screens/eventDetail.ts`   |
+| Reservations              | `#/tickets`            | `screens/tickets.ts`       |
+| Social media / Comment    | `#/community`, `#/share/:id` | `screens/community.ts` |
+| Profile / Modifier / Outs | `#/profile`, `#/profile/edit`, `#/outs` | `screens/profile.ts` |
+| Events Enregistrés        | `#/favorites`          | `screens/collections.ts`   |
+| Categorie                 | `#/categories`         | `screens/collections.ts`   |
+| Acces Appareil / Photo    | `#/camera`             | `screens/camera.ts`        |
 
-| Élément Figma              | Variable CSS             |
-| -------------------------- | ------------------------ |
-| Couleur principale / liens | `--color-primary`        |
-| Texte principal            | `--color-ink`            |
-| Texte secondaire           | `--color-muted`          |
-| Fond d’application         | `--color-paper`          |
-| Fond de carte              | `--color-card`           |
-| Bordure                    | `--color-line`           |
-| Gratuit                    | `--color-free`           |
-| Payant                     | `--color-paid`           |
-| Erreur                     | `--color-danger`         |
-| Texte H1                   | `--font-size-h1`         |
-| Texte de carte             | `--font-size-card-title` |
-| Espacement standard        | `--space-4`              |
-| Rayon de carte             | `--radius-medium`        |
-| Ombre de carte             | `--shadow-card`          |
-| Cible tactile              | `--touch-target-min`     |
-| Hauteur de zone basse      | `--bottom-bar-height`    |
+## Tokens principaux
+
+| Figma                       | Variable CSS            | Valeur    |
+| --------------------------- | ----------------------- | --------- |
+| Acid Lime                   | `--color-primary`       | `#B8E62E` |
+| Electric Violet             | `--color-secondary`     | `#7033FF` |
+| Noir profond (fond)         | `--color-bg`            | `#151515` |
+| Surface (écrans)            | `--color-surface`       | `#191919` |
+| Gris foncé (cartes)         | `--color-card`          | `#353535` |
+| Gris clair                  | `--color-text-muted`    | `#BCBCBC` |
+| Blanc                       | `--color-text`          | `#FEFEFE` |
+| Rose (bouton Guest)         | `--color-accent`        | `#FD71EB` |
+| Rayon média / carte / pill  | `--radius-media/card/pill` | 16 / 24 / 999 px |
+| Hauteur bouton              | `--size-button`         | 65 px     |
+
+Polices : Anton (Display, capitales) et Plus Jakarta Sans (UI), importées dans `index.html`.
+
+## Mode invité
+
+Toute action engageante (réserver, poster, commenter, liker, enregistrer, favoris) passe par `requireAuth()`.
+Un invité voit un **écran plein** « Rejoins les Outers » avec Se connecter / Créer un compte / Retour.
+Après connexion, l'utilisateur revient à l'écran d'origine.
 
 ## Checklist de réception
 
-- Aucun style `px` fixe pour les couleurs ou espacements hors des tokens.
-- La maquette reste lisible à 320 px sans débordement horizontal.
-- Toutes les actions mesurent au moins 44 × 44 px.
-- Les textes restent accessibles en mode sombre.
-- Les images conservent leur ratio et utilisent `object-fit: cover`.
-- Les liens externes restent sécurisés.
-- Les états chargement, erreur, vide et hors-ligne sont prévus.
-- Les safe areas iOS sont réservées lorsque les contrôles atteignent le bas.
-- Les animations sont limitées à `transform` et `opacity`.
-
-## Checklist responsive mobile-first
-
-Tester les cas suivants dans DevTools puis sur appareils réels :
-
-| Largeur | Orientation        | Vérifications                                                     |
-| ------- | ------------------ | ----------------------------------------------------------------- |
-| 320 px  | Portrait / paysage | Aucun débordement horizontal, liens et boutons à 44 × 44 px       |
-| 360 px  | Portrait           | Grille sur une colonne, marge latérale cohérente                  |
-| 390 px  | Portrait           | Maquette de référence, ratio 16/9 des médias, zone basse réservée |
-| 430 px  | Portrait           | Aucun recouvrement du titre ou du lieu                            |
-| 600 px  | Portrait / paysage | Passage à 2 colonnes                                              |
-| 768 px  | Portrait / paysage | Deux colonnes sans sidebar inventée                               |
-| 1024 px | Paysage            | Trois colonnes à partir de 900 px                                 |
-| 1280 px | Paysage            | Colonnes de 280 px minimum                                        |
-
-Contrôles transverses :
-
-- Zoom navigateur à 200 % : aucun contenu inutilisable ou masqué.
-- Modes clair et sombre : vérifier les contrastes des textes et badges.
-- Paysage iPhone/Android : vérifier les quatre safe areas.
-- Champs futurs : police minimale de 16 px pour éviter le zoom iOS.
-- Zones tactiles, navigation clavier et `prefers-reduced-motion`.
+- 390 px sans débordement horizontal, cibles tactiles ≥ 44 px, safe areas iOS réservées.
+- Animations limitées à `transform` / `opacity`, `prefers-reduced-motion` respecté.
+- Images : `loading="lazy"`, dimensions déclarées, repli Unsplash automatique.
+- `npm run build` sans erreur.

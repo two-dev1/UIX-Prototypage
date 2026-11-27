@@ -1,107 +1,109 @@
-/* Breakpoints Figma : 600 px tablette portrait, 900 px tablette large, 1200 px bureau. */
+/*
+ * Design tokens OUTRS — source : Figma « 01. Foundations & Tokens » et « 04.Final screens ».
+ * Un seul thème : sombre. Aucune variante claire.
+ */
 @layer tokens, base, layout, components, utilities;
 
-:root {
-  --color-ink: #151515;
-  --color-muted: #bcbcbc;
-  --color-paper: #fefefe;
-  --color-card: #fefefe;
-  --color-line: #353535;
-  --color-primary: #b8e62e;
-  --color-primary-dark: #9bc51f;
-  --color-secondary: #7033ff;
-  --color-background: #151515;
-  --color-surface: #191919;
-  --color-border-dark: #353535;
-  --color-text-muted-dark: #bcbcbc;
-  --color-free: #151515;
-  --color-free-bg: #b8e62e;
-  --color-paid: #fefefe;
-  --color-paid-bg: #7033ff;
-  --color-danger: #7033ff;
-  --color-danger-bg: #fefefe;
-  --color-transparent: transparent;
-  --color-focus: #151515;
+@layer tokens {
+  :root {
+    color-scheme: dark;
 
-  --font-sans: "Plus Jakarta Sans", sans-serif;
-  --font-display: "Anton", Impact, sans-serif;
-  --font-size-base: 18px;
-  --font-size-h1: 24px;
-  --font-size-display-xl: 40px;
-  --font-size-card-title: 18px;
-  --font-size-small: 12px;
-  --font-size-input: 16px;
-  --line-height-base: 1.25;
-  --line-height-heading: 1.14;
+    /* Palette (Fondations · 8 couleurs) */
+    --palette-lime: #b8e62e;
+    --palette-violet: #7033ff;
+    --palette-black: #151515;
+    --palette-surface: #191919;
+    --palette-grey-dark: #353535;
+    --palette-grey-light: #bcbcbc;
+    --palette-white: #fefefe;
+    --palette-pink: #fd71eb;
 
-  --space-4: 4px;
-  --space-8: 8px;
-  --space-12: 12px;
-  --space-16: 16px;
-  --space-20: 20px;
-  --space-24: 24px;
-  --space-32: 32px;
-  --space-40: 40px;
-  --space-48: 48px;
-  --radius-media: 16px;
-  --radius-card: 24px;
-  --radius-price: 10px;
-  --radius-pill: 999px;
-  --shadow-card: 0 12px 32px rgba(21, 21, 21, 0.16);
+    /* Rôles sémantiques */
+    --color-primary: var(--palette-lime);
+    --color-primary-hover: #a6d11f;
+    --color-primary-active: #94bb1a;
+    --color-on-primary: var(--palette-black);
+    --color-secondary: var(--palette-violet);
+    --color-secondary-hover: #5f22f0;
+    --color-secondary-active: #4f17d6;
+    --color-on-secondary: var(--palette-white);
+    --color-accent: var(--palette-pink);
+    --color-bg: var(--palette-black);
+    --color-surface: var(--palette-surface);
+    --color-card: var(--palette-grey-dark);
+    --color-border: var(--palette-grey-dark);
+    --color-border-strong: var(--palette-grey-light);
+    --color-text: var(--palette-white);
+    --color-text-muted: var(--palette-grey-light);
+    --color-field: var(--palette-white);
+    --color-on-field: var(--palette-black);
+    --color-placeholder: var(--palette-grey-light);
+    --color-avatar: #add72c;
+    --color-photo-placeholder: #928585;
+    --color-scrim: rgb(0 0 0 / 0.7);
+    --color-scrim-light: rgb(0 0 0 / 0.4);
+    --color-focus: var(--palette-lime);
 
-  --container-width: 390px;
-  --card-min-width: 350px;
-  --media-ratio: 16 / 10;
-  --touch-target-min: 44px;
-  --bottom-bar-height: 72px;
+    /* Typographie (Anton = Display, Plus Jakarta Sans = UI) */
+    --font-display: "Anton", Impact, "Arial Narrow Bold", sans-serif;
+    --font-ui: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  --space-safe-top: env(safe-area-inset-top);
-  --space-safe-right: env(safe-area-inset-right);
-  --space-safe-bottom: env(safe-area-inset-bottom);
-  --space-safe-left: env(safe-area-inset-left);
-  --outline-focus-width: 3px;
+    --text-display-size: 40px;
+    --text-display-line: 37.8px;
+    --text-h1-size: 24px;
+    --text-h1-line: 27.3px;
+    --text-h2-size: 18px;
+    --text-h2-line: 25.2px;
+    --text-body-size: 18px;
+    --text-body-line: 22.5px;
+    --text-label-size: 18px;
+    --text-label-line: 19.5px;
+    --text-button-size: 24px;
+    --text-button-line: 21px;
+    --text-caption-size: 12px;
+    --text-caption-line: 18px;
+    --text-input-size: 16px;
 
-  --space-1: var(--space-4);
-  --space-2: var(--space-8);
-  --space-3: var(--space-12);
-  --space-5: var(--space-20);
-  --space-6: var(--space-32);
-  --radius-small: var(--radius-media);
-  --radius-medium: var(--radius-card);
-}
+    /* Espacements 4 → 48 */
+    --space-4: 4px;
+    --space-8: 8px;
+    --space-12: 12px;
+    --space-16: 16px;
+    --space-20: 20px;
+    --space-24: 24px;
+    --space-32: 32px;
+    --space-40: 40px;
+    --space-48: 48px;
 
-[data-theme="dark"] {
-  --color-ink: #f4efe6;
-  --color-muted: #bbb3a5;
-  --color-paper: #171715;
-  --color-card: #24241f;
-  --color-line: #403d35;
-  --color-primary: #83a9df;
-  --color-primary-dark: #b0c8ee;
-  --color-free: #91ddb1;
-  --color-free-bg: #1d3a2b;
-  --color-paid: #f0bb7f;
-  --color-paid-bg: #4a351f;
-  --color-danger: #ffc1c1;
-  --color-danger-bg: #4b2525;
-  --shadow-card: 0 10px 24px rgba(0, 0, 0, 0.22);
-}
+    /* Rayons */
+    --radius-price: 10px;
+    --radius-media: 16px;
+    --radius-card: 24px;
+    --radius-pill: 999px;
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]):not([data-theme="dark"]) {
-    --color-ink: #f4efe6;
-    --color-muted: #bbb3a5;
-    --color-paper: #171715;
-    --color-card: #24241f;
-    --color-line: #403d35;
-    --color-primary: #83a9df;
-    --color-primary-dark: #b0c8ee;
-    --color-free: #91ddb1;
-    --color-free-bg: #1d3a2b;
-    --color-paid: #f0bb7f;
-    --color-paid-bg: #4a351f;
-    --color-danger: #ffc1c1;
-    --color-danger-bg: #4b2525;
-    --shadow-card: 0 10px 24px rgba(0, 0, 0, 0.22);
+    /* Dimensions */
+    --screen-max: 440px;
+    --gutter: var(--space-20);
+    --size-button: 65px;
+    --size-chip: 51px;
+    --size-field: 48px;
+    --size-touch: 44px;
+    --size-avatar-sm: 40px;
+    --size-avatar-md: 48px;
+    --size-avatar-lg: 112px;
+    --size-story: 80px;
+    --nav-height: 76px;
+    --nav-offset: var(--space-16);
+
+    /* Safe areas iOS */
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+
+    /* Mouvement (Fondations : 180 ms) */
+    --duration: 180ms;
+    --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --outline-focus: 2px solid var(--color-focus);
   }
 }

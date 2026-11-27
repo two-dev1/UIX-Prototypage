@@ -1,33 +1,97 @@
 export type AppRoute =
   | { type: "welcome" }
+  | { type: "start" }
   | { type: "auth"; mode: "login" | "register" }
   | { type: "home" }
+  | { type: "event"; id: string }
   | { type: "tickets" }
   | { type: "community" }
+  | { type: "share"; postId: string }
   | { type: "profile" }
-  | { type: "event"; id: string }
-  | { type: "share"; postId: string };
+  | { type: "profile-edit" }
+  | { type: "outs" }
+  | { type: "favorites" }
+  | { type: "categories" }
+  | { type: "camera" };
 
 /** Convertit le hash en route typée sans dépendance externe. */
 export function readRoute(): AppRoute {
   const hash = window.location.hash.replace(/^#/, "") || "/home";
-  const segments = hash.split("/").filter((segment) => segment.length > 0);
+  const [first = "", second = ""] = hash
+    .split("?")[0]
+    .split("/")
+    .filter((segment) => segment.length > 0);
 
-  if (segments[0] === "event" && segments[1])
-    return { type: "event", id: decodeURIComponent(segments[1]) };
-  if (segments[0] === "share" && segments[1])
-    return { type: "share", postId: decodeURIComponent(segments[1]) };
-  if (segments[0] === "welcome") return { type: "welcome" };
-  if (segments[0] === "auth") {
-    const mode = segments[1] === "register" ? "register" : "login";
-    return { type: "auth", mode };
+  switch (first) {
+    case "welcome":
+      return { type: "welcome" };
+    case "start":
+      return { type: "start" };
+    case "auth":
+      return { type: "auth", mode: second === "register" ? "register" : "login" };
+    case "event":
+      return second ? { type: "event", id: decodeURIComponent(second) } : { type: "home" };
+    case "share":
+      return second
+        ? { type: "share", postId: decodeURIComponent(second) }
+        : { type: "community" };
+    case "tickets":
+      return { type: "tickets" };
+    case "community":
+      return { type: "community" };
+    case "profile":
+      return second === "edit" ? { type: "profile-edit" } : { type: "profile" };
+    case "outs":
+      return { type: "outs" };
+    case "favorites":
+      return { type: "favorites" };
+    case "categories":
+      return { type: "categories" };
+    case "camera":
+      return { type: "camera" };
+    default:
+      return { type: "home" };
   }
-  if (segments[0] === "tickets") return { type: "tickets" };
-  if (segments[0] === "community") return { type: "community" };
-  if (segments[0] === "profile") return { type: "profile" };
-  return { type: "home" };
 }
 
-export function navigate(path: string): void {
+type RouteListener = () => void;
+
+let listener: RouteListener | undefined;
+let inAppDepth = 0;
+
+/** Branche le rendu sur les changements de hash. */
+export function startRouter(onChange: RouteListener): void {
+  listener = onChange;
+  window.addEventListener("hashchange", () => {
+    inAppDepth++;
+    onChange();
+  });
+}
+
+export function navigate(path: string, options: { replace?: boolean } = {}): void {
+  const target = `#${path}`;
+  if (options.replace) {
+    window.history.replaceState(null, "", target);
+    listener?.();
+    return;
+  }
+  if (window.location.hash === target) {
+    listener?.();
+    return;
+  }
   window.location.hash = path;
+}
+
+/** Retour arrière : historique interne si disponible, sinon route de repli. */
+export function goBack(fallback = "/home"): void {
+  if (inAppDepth > 0) {
+    inAppDepth -= 2; // le hashchange provoqué par back() réincrémente le compteur
+    window.history.back();
+    return;
+  }
+  navigate(fallback, { replace: true });
+}
+
+export function currentPath(): string {
+  return window.location.hash.replace(/^#/, "") || "/home";
 }

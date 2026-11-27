@@ -1,78 +1,212 @@
-#app {
-  width: 100%;
-  max-width: 390px;
-  min-height: 100dvh;
-  margin-inline: auto;
-  padding: 0;
-}
+/* Structures d'écran : tout est en flexbox, référence mobile 390 px (marges 20 px). */
+@layer layout {
+  /* Écran applicatif (avec barre du haut et navigation basse) */
+  .screen {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+    flex: 1 0 auto;
+    width: 100%;
+    max-width: var(--screen-max);
+    margin-inline: auto;
+    padding:
+      calc(var(--space-24) + var(--safe-top))
+      calc(var(--gutter) + var(--safe-right))
+      calc(var(--nav-height) + var(--nav-offset) + var(--space-40) + var(--safe-bottom))
+      calc(var(--gutter) + var(--safe-left));
+    background: var(--color-surface);
+    animation: screen-in var(--duration) var(--ease);
+  }
 
-.app-shell {
-  width: 100%;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-20);
-  padding-bottom: calc(
-    var(--bottom-bar-height) + var(--space-safe-bottom) + var(--space-20)
-  );
-}
+  .screen--loose {
+    gap: var(--space-40);
+  }
 
-.grid,
-.profile-stats,
-.outs-grid,
-.community-feed,
-.filter-pills,
-.event-detail__actions,
-.post-card__actions,
-.auth__social,
-.auth__form {
-  display: flex;
-  flex-direction: column;
-}
+  .screen--bare {
+    padding-bottom: calc(var(--space-48) + var(--safe-bottom));
+  }
 
-.grid,
-.community-feed,
-.profile-stats {
-  gap: var(--space-16);
-}
+  /* Écrans d'onboarding : logo en haut, contenu, action en bas */
+  .onboarding {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-48);
+    flex: 1 0 auto;
+    width: 100%;
+    max-width: var(--screen-max);
+    min-height: 100dvh;
+    margin-inline: auto;
+    padding:
+      calc(var(--space-48) + var(--safe-top))
+      calc(var(--gutter) + var(--safe-right))
+      calc(var(--space-48) + var(--safe-bottom))
+      calc(var(--gutter) + var(--safe-left));
+    background: var(--color-surface);
+    animation: screen-in var(--duration) var(--ease);
+  }
 
-.grid,
-.community-feed {
-  width: 100%;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
+  .onboarding--center {
+    justify-content: center;
+  }
 
-.grid > li {
-  width: 100%;
-  display: flex;
-}
+  .onboarding__head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: var(--size-touch);
+    position: relative;
+  }
 
-.profile-stats,
-.filter-pills,
-.event-detail__actions,
-.post-card__actions,
-.auth__social {
-  flex-direction: row;
-}
+  .onboarding__back {
+    position: absolute;
+    left: 0;
+  }
 
-.profile-stats {
-  justify-content: space-between;
-}
+  .onboarding__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+    width: 100%;
+  }
 
-.profile-stats span {
-  display: flex;
-  flex-direction: column;
-}
+  .onboarding__body--grow {
+    flex: 1 1 auto;
+  }
 
-.bottom-bar-reserved {
-  position: fixed;
-  z-index: 10;
-  inset-block-end: 0;
-  inset-inline: 0;
-  height: calc(var(--bottom-bar-height) + var(--space-safe-bottom));
-  padding-bottom: var(--space-safe-bottom);
-  background: transparent;
-  pointer-events: none;
+  /* Empilements génériques */
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+    width: 100%;
+  }
+
+  .stack--8 { gap: var(--space-8); }
+  .stack--12 { gap: var(--space-12); }
+  .stack--16 { gap: var(--space-16); }
+  .stack--20 { gap: var(--space-20); }
+  .stack--26 { gap: 26px; }
+  .stack--32 { gap: var(--space-32); }
+  .stack--40 { gap: var(--space-40); }
+  .stack--center { align-items: center; }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-12);
+    width: 100%;
+  }
+
+  .row--between { justify-content: space-between; }
+  .row--center { justify-content: center; }
+  .row--start { align-items: flex-start; }
+  .row--20 { gap: var(--space-20); }
+  .row--30 { gap: 30px; }
+
+  /* Défilement horizontal (filtres, stories, outs) */
+  .h-scroll {
+    display: flex;
+    gap: 10px;
+    width: calc(100% + var(--gutter));
+    margin-right: calc(var(--gutter) * -1);
+    padding-right: var(--gutter);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .h-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .h-scroll > * {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+  }
+
+  .h-scroll--32 { gap: var(--space-32); }
+  .h-scroll--stories { gap: var(--space-24); padding-block: 3px; }
+
+  /* Liste de cartes */
+  .feed {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+    width: 100%;
+  }
+
+  .feed > li {
+    display: flex;
+    width: 100%;
+  }
+
+  .feed--32 { gap: var(--space-32); }
+  .feed--16 { gap: var(--space-16); }
+
+  .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-16);
+    width: 100%;
+  }
+
+  .wrap > * {
+    flex: 1 1 calc(50% - var(--space-16) / 2);
+    max-width: calc(50% - var(--space-16) / 2);
+  }
+
+  /* Couches superposées (modales, feuilles, plein écran) */
+  .overlay-root {
+    display: flex;
+  }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    background: var(--color-scrim-light);
+    animation: fade-in var(--duration) var(--ease);
+  }
+
+  .overlay--center { justify-content: center; background: var(--color-scrim); }
+  .overlay--top { justify-content: flex-start; }
+  .overlay--full { justify-content: flex-start; background: var(--color-surface); }
+  .overlay--dark { background: var(--palette-black); }
+  .overlay.is-closing { animation: fade-out var(--duration) var(--ease) forwards; }
+
+  .toast-host {
+    position: fixed;
+    left: 50%;
+    bottom: calc(var(--nav-height) + var(--nav-offset) + var(--space-16) + var(--safe-bottom));
+    z-index: 70;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-8);
+    width: min(350px, calc(100% - var(--gutter) * 2));
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  @keyframes screen-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fade-out {
+    to { opacity: 0; }
+  }
 }

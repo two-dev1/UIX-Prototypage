@@ -1,7 +1,10 @@
-import type { ApiPage, ApiResponse } from "./types.ts";
+import type { ApiPage, ApiResponse, ParisEvent } from "./types.ts";
 
 const RECORDS_URL =
   "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records";
+
+/** Limite maximale acceptée par l'API OpenData v2.1. */
+export const API_MAX_LIMIT = 100;
 
 export interface GetEventsOptions {
   limit?: number;
@@ -27,16 +30,54 @@ export async function getEventsPage(
     signal,
   } = options;
   const params = new URLSearchParams({
-    limit: String(limit),
+    limit: String(Math.min(limit, API_MAX_LIMIT)),
     offset: String(offset),
   });
   if (search.trim()) params.set("search", search.trim());
   const conditions: string[] = [];
   if (freeOnly) conditions.push('price_type="gratuit"');
-  if (arrondissement) conditions.push(`address_zipcode="${arrondissement}"`);
-  if (category) conditions.push(`qfap_tags="${category}"`);
+  if (arrondissement)
+    conditions.push(`address_zipcode="${odsqlString(arrondissement)}"`);
+  // `qfap_tags` contient plusieurs étiquettes séparées par « ; » : recherche partielle.
+  if (category) conditions.push(`qfap_tags like "%${odsqlString(category)}%"`);
   if (conditions.length > 0) params.set("where", conditions.join(" and "));
+  return fetchPage(params, signal);
+}
 
+/** Récupère un événement précis (lien direct, rechargement de la page détail). */
+export async function getEventById(
+  id: string,
+  signal?: AbortSignal,
+): Promise<ParisEvent | null> {
+  const page = await getEventsByIds([id], signal);
+  return page[0] ?? null;
+}
+
+/** Récupère plusieurs événements par identifiant (favoris). */
+export async function getEventsByIds(
+  ids: string[],
+  signal?: AbortSignal,
+): Promise<ParisEvent[]> {
+  const unique = [...new Set(ids.filter((id) => id.trim()))].slice(
+    0,
+    API_MAX_LIMIT,
+  );
+  if (unique.length === 0) return [];
+  const params = new URLSearchParams({
+    limit: String(unique.length),
+    where: unique.map((id) => `id="${odsqlString(id)}"`).join(" or "),
+  });
+  const page = await fetchPage(params, signal);
+  const order = new Map(unique.map((id, index) => [id, index]));
+  return page.results.sort(
+    (a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0),
+  );
+}
+
+async function fetchPage(
+  params: URLSearchParams,
+  signal?: AbortSignal,
+): Promise<ApiPage> {
   let response: Response;
   try {
     response = await fetch(`${RECORDS_URL}?${params.toString()}`, { signal });
@@ -66,6 +107,11 @@ export async function getEventsPage(
     );
   }
   return { totalCount: payload.total_count, results: payload.results };
+}
+
+/** Neutralise les guillemets dans une valeur ODSQL. */
+function odsqlString(value: string): string {
+  return value.replaceAll("\\", "\\\\").replaceAll('"', '\\"');
 }
 
 function isApiResponse(value: unknown): value is ApiResponse {

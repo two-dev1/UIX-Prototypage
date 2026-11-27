@@ -12,5 +12,9 @@
     "typescript": "~7.0.2",
     "vite": "^8.3.6",
     "vite-plugin-pwa": "^2.0.0"
+  },
+  "dependencies": {
+    "lucide": "^1.82.0",
+    "uqr": "^0.1.3"
   }
 }

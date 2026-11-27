@@ -1,144 +1,61 @@
 import type { ParisEvent } from "../types.ts";
+import { baseLikes, formatDateRange, formatPrice, toPlainText, truncate } from "../utils/events.ts";
 import { asText, escapeHtml } from "../utils/html.ts";
+import { icon } from "../utils/icons.ts";
+import { eventImage, img } from "../utils/images.ts";
 
-const LEAD_MAX_LENGTH = 120;
+export interface EventCardOptions {
+  saved?: boolean;
+  liked?: boolean;
+  /** Carte non cliquable (page détail). */
+  static?: boolean;
+  eager?: boolean;
+}
 
-const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-});
-
-/** Rend une carte événement prête à être insérée dans la grille. */
-export function EventCard(
-  event: ParisEvent,
-  options: { saved?: boolean } = {},
-): string {
+/** Carte « QFAP/Event card » : média 16:10 masqué, titre 2 lignes + partage/favori, likes, prix. */
+export function EventCard(event: ParisEvent, options: EventCardOptions = {}): string {
+  const id = escapeHtml(asText(event.id));
   const title = asText(event.title) || "Événement sans titre";
-  const lead = truncate(toPlainText(event.lead_text), LEAD_MAX_LENGTH);
-  const place = formatPlace(event);
-  const price = formatPrice(event.price_type);
-  const priceClass =
-    asText(event.price_type).toLowerCase() === "gratuit"
-      ? "card__price card__price--free"
-      : "card__price";
-  const saved = options.saved === true;
-  const slot = getEventSlot(event.date_start);
-  const likes =
-    12 +
-    Math.abs(
-      asText(event.id)
-        .split("")
-        .reduce((sum, char) => sum + char.charCodeAt(0), 0) % 80,
-    );
+  const dates = formatDateRange(event);
+  const lead = truncate(toPlainText(event.lead_text), 180);
+  const price = formatPrice(event);
+  const image = eventImage(event);
+  const likes = baseLikes(asText(event.id)) + (options.liked ? 1 : 0);
+  const media = `<span class="media media--event">${img(image.src, image.alt, {
+    fallback: image.fallback,
+    width: 320,
+    height: 193,
+    eager: options.eager,
+  })}</span>`;
+  const open = (inner: string, extra = ""): string =>
+    options.static
+      ? `<span class="${extra}">${inner}</span>`
+      : `<button type="button" class="${extra}" data-action="open-event" data-id="${id}">${inner}</button>`;
 
-  return `
-    <article class="card" data-id="${escapeHtml(asText(event.id))}">
-      <button type="button" class="card__bookmark${saved ? " is-active" : ""}" data-bookmark="${escapeHtml(asText(event.id))}" aria-label="${saved ? "Retirer des favoris" : "Ajouter aux favoris"}">${saved ? "★" : "☆"}</button>
-      ${renderCover(event, title)}
-      <div class="card__body">
-        ${slot ? `<p class="card__slot">${escapeHtml(slot)}</p>` : ""}
-        ${price ? `<p class="${priceClass}">${escapeHtml(price)}</p>` : `<p class="card__price">Tarif non précisé</p>`}
-        <h2 class="card__title"><button type="button" class="card__title-button" data-event-open="${escapeHtml(asText(event.id))}">${escapeHtml(title)}</button></h2>
-        ${renderDates(event)}
-        ${place ? `<p class="card__place">${escapeHtml(place)}</p>` : ""}
-        ${lead ? `<p class="card__lead">${escapeHtml(lead)}</p>` : ""}
-        <div class="card__actions">
-          <button type="button" class="button button--small" data-event-like="${escapeHtml(asText(event.id))}" aria-label="Liker cet événement">♡ ${likes}</button>
-          <button type="button" class="button button--small button--primary" data-event-open="${escapeHtml(asText(event.id))}">Voir</button>
+  return `<article class="card" data-id="${id}">
+    <div class="card__open">
+      ${options.static ? media : `<button type="button" class="card__open" data-action="open-event" data-id="${id}" aria-label="Voir ${escapeHtml(title)}" tabindex="-1">${media}</button>`}
+      <div class="card__content">
+        <div class="card__head">
+          ${open(escapeHtml(title), "h1 card__title")}
+          <span class="card__tools">
+            <button type="button" class="icon-button" data-action="share-event" data-id="${id}" aria-label="Partager">${icon("send")}</button>
+            <button type="button" class="icon-button" data-action="save-event" data-id="${id}" aria-pressed="${options.saved ? "true" : "false"}" aria-label="${options.saved ? "Retirer des favoris" : "Enregistrer"}">${icon(options.saved ? "save-green" : "save-white")}</button>
+          </span>
         </div>
+        ${dates ? `<p class="card__date">${escapeHtml(dates)}</p>` : ""}
+        ${lead ? `<p class="body card__lead">${escapeHtml(lead)}</p>` : ""}
       </div>
-    </article>
-  `;
+    </div>
+    <div class="card__footer">
+      <button type="button" class="likes${options.liked ? " is-active" : ""}" data-action="like-event" data-id="${id}" aria-pressed="${options.liked ? "true" : "false"}">
+        ${icon("heart-green")}<span data-count>${likes}</span><span class="visually-hidden"> j’aime</span>
+      </button>
+      <span class="price">${escapeHtml(price.label)}</span>
+    </div>
+  </article>`;
 }
 
-function toPlainText(value: string | null): string {
-  const raw = asText(value);
-  if (!raw) return "";
-  const withSpaces = raw
-    .replace(/<br\s*\/?>/gi, " ")
-    .replace(/<\/(p|div|li|h[1-6])>/gi, " ");
-  const documentFragment = new DOMParser().parseFromString(
-    withSpaces,
-    "text/html",
-  );
-  return (documentFragment.body.textContent ?? "").replace(/\s+/g, " ").trim();
-}
-
-function renderCover(event: ParisEvent, title: string): string {
-  const alt = asText(event.cover_alt) || title;
-  const src = asText(event.cover_url);
-  if (!src) return `<div class="card__media">${renderFallback(alt)}</div>`;
-  return `<div class="card__media"><img src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async"></div>`;
-}
-
-function renderFallback(alt: string): string {
-  return `<div class="card__fallback" role="img" aria-label="${escapeHtml(alt)}">Image indisponible</div>`;
-}
-
-function renderDates(event: ParisEvent): string {
-  const start = parseDate(event.date_start);
-  const end = parseDate(event.date_end);
-  if (start && end && !isSameDay(start, end)) {
-    return `<p class="card__dates">Du <time datetime="${escapeHtml(asText(event.date_start))}">${escapeHtml(dateFormatter.format(start))}</time> au <time datetime="${escapeHtml(asText(event.date_end))}">${escapeHtml(dateFormatter.format(end))}</time></p>`;
-  }
-  const single = start ?? end;
-  const iso = start ? event.date_start : event.date_end;
-  if (single && iso) {
-    return `<p class="card__dates"><time datetime="${escapeHtml(iso)}">${escapeHtml(dateFormatter.format(single))}</time></p>`;
-  }
-  const description = truncate(
-    toPlainText(event.date_description),
-    LEAD_MAX_LENGTH,
-  );
-  return description
-    ? `<p class="card__dates">${escapeHtml(description)}</p>`
-    : "";
-}
-
-function formatPlace(event: ParisEvent): string {
-  return [asText(event.address_name), asText(event.address_city)]
-    .filter((part) => part.length > 0)
-    .join(" · ");
-}
-
-function formatPrice(price: string | null): string {
-  const text = asText(price);
-  if (!text) return "";
-  return text.charAt(0).toLocaleUpperCase("fr-FR") + text.slice(1);
-}
-
-function parseDate(value: string | null): Date | null {
-  const text = asText(value);
-  if (!text) return null;
-  const date = new Date(text);
-  return Number.isNaN(date.getTime()) ? null : date;
-}
-
-function isSameDay(left: Date, right: Date): boolean {
-  return (
-    left.getFullYear() === right.getFullYear() &&
-    left.getMonth() === right.getMonth() &&
-    left.getDate() === right.getDate()
-  );
-}
-
-function truncate(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text;
-  const slice = text.slice(0, maxLength);
-  const lastSpace = slice.lastIndexOf(" ");
-  const cut = lastSpace > maxLength * 0.6 ? slice.slice(0, lastSpace) : slice;
-  return `${cut.trimEnd()}…`;
-}
-
-export function getEventSlot(
-  dateStart: string | null,
-): "Matin" | "Journée" | "Soir" | "" {
-  if (!dateStart) return "";
-  const date = new Date(dateStart);
-  if (Number.isNaN(date.getTime())) return "";
-  const hour = date.getHours();
-  if (hour < 12) return "Matin";
-  if (hour < 18) return "Journée";
-  return "Soir";
+export function EventCardSkeleton(): string {
+  return `<div class="skeleton" aria-hidden="true"><span class="media media--event is-loading"></span><span class="skeleton__line"></span><span class="skeleton__line"></span><span class="skeleton__line"></span></div>`;
 }
