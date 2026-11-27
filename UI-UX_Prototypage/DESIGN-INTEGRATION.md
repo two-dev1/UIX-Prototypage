@@ -12,6 +12,10 @@ Thème unique : **sombre**. Mise en page **100 % flexbox** (aucun `display: bloc
 | ≥ 1280 px      | Desktop façon X : nav gauche complète (Publier, compte), fil central 600 px, panneau droit (recherche permanente, lives, catégories, prochains billets) |
 
 Les feuilles du bas deviennent des boîtes de dialogue centrées à partir de 768 px.
+
+Écrans d'entrée (intro, connexion, inscription, mot de passe, tutoriel, permission caméra) : gabarit `entry()` (`src/app.ts`).
+Mobile : formulaire seul · tablette : carte centrée · desktop (≥ 1024 px) : écran coupé en deux, marque OUT75 à gauche, formulaire à droite.
+Le portail de connexion devient une boîte de dialogue ; caméra, publication et live s'élargissent sur desktop.
 Styles : `src/styles/responsive.css` (couche `responsive`, prioritaire sur `components`).
 Composants : `SideNav`, `SidePanel` et `AppScreen` dans `src/components/chrome.ts`.
 

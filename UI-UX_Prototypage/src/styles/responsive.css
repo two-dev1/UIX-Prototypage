@@ -99,4 +99,129 @@
     from { opacity: 0; transform: translateY(12px) scale(0.98); }
     to { opacity: 1; transform: none; }
   }
+
+  /* ===================== Écrans d'entrée & plein écran ===================== */
+
+  /* Tablette : formulaire en carte centrée */
+  @media (min-width: 768px) {
+    .entry {
+      align-items: center;
+      justify-content: center;
+      min-height: 100dvh;
+      padding: var(--space-32);
+      background: var(--color-bg);
+    }
+
+    .entry > .onboarding {
+      min-height: min(880px, calc(100dvh - var(--space-32) * 2));
+      max-width: 480px;
+      margin: 0;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+
+    .entry .fullscreen { min-height: 0; max-width: none; flex: 1 0 auto; }
+
+    /* Portail « Rejoins les Outers » ouvert depuis l'app : boîte de dialogue */
+    .overlay--full:not(.overlay--dark) {
+      justify-content: center;
+      padding: var(--space-24);
+      background: var(--color-scrim);
+    }
+
+    .overlay--full:not(.overlay--dark) > .fullscreen {
+      min-height: 0;
+      max-width: 480px;
+      max-height: calc(100dvh - var(--space-48));
+      padding: var(--space-32);
+      gap: var(--space-24);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      background: var(--color-surface);
+      animation: dialog-in 220ms var(--ease);
+    }
+
+    .overlay--full:not(.overlay--dark) .logo-75 { max-width: 300px; align-self: center; }
+  }
+
+  /* Desktop : écran coupé en deux, marque à gauche, formulaire à droite */
+  @media (min-width: 1024px) {
+    .entry {
+      flex-direction: row;
+      align-items: stretch;
+      justify-content: stretch;
+      padding: 0;
+    }
+
+    .entry__brand {
+      position: sticky;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-40);
+      flex: 1 1 50%;
+      height: 100dvh;
+      padding: var(--space-48) clamp(var(--space-40), 5vw, 96px);
+      overflow: hidden;
+    }
+
+    .entry > .onboarding {
+      flex: 0 0 min(600px, 50%);
+      justify-content: center;
+      gap: var(--space-40);
+      max-width: none;
+      min-height: 100dvh;
+      padding: var(--space-48) clamp(var(--space-32), 5vw, 88px);
+      border: 0;
+      border-left: 1px solid var(--color-border);
+      border-radius: 0;
+    }
+
+    .entry > .onboarding > * { width: 100%; max-width: 440px; }
+    .entry > .onboarding > .button--fixed { width: min(264px, 100%); }
+
+    /* La marque est déjà affichée à gauche : pas de doublon dans le formulaire */
+    .entry .onboarding__head .logo,
+    .entry .fullscreen__head .logo,
+    .entry .fullscreen .logo-75 { display: none; }
+    .entry .onboarding__head:not(:has(button)) { display: none; }
+
+    .entry .fullscreen {
+      min-height: 0;
+      max-width: 440px;
+      padding: 0;
+      justify-content: center;
+    }
+
+    .entry .tutorial__visual--wide { width: 70%; margin-inline: auto; }
+
+    /* Caméra : viseur large et arrondi */
+    .camera {
+      max-width: min(960px, calc(100% - var(--space-64, 64px)));
+      min-height: calc(100dvh - 64px);
+      margin-block: 32px;
+      border-radius: var(--radius-card);
+    }
+
+    /* Publication : aperçu et formulaire côte à côte */
+    .composer {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      max-width: 960px;
+      padding-top: calc(var(--space-32) + var(--safe-top));
+    }
+
+    .composer > .topbar { flex: 0 0 100%; position: static; margin: 0; width: 100%; padding: 0; background: none; border: 0; backdrop-filter: none; }
+    .composer > .composer__media { flex: 1 1 45%; }
+    .composer > #composer { flex: 1 1 45%; }
+
+    /* Live : lecteur plus large */
+    .live { max-width: 960px; }
+
+    /* Loader : logo 75 recentré */
+    .splash__mark { width: 90vw; max-width: 1400px; transform: translate(6%, 2%) rotate(-2deg); }
+  }
 }

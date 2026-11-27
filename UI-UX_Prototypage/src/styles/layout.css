@@ -39,13 +39,25 @@
     min-width: 0;
   }
 
+  /* Gabarit des écrans d'entrée : sur mobile, seul le formulaire est visible */
+  .entry {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+    width: 100%;
+  }
+
+  .entry__brand {
+    display: none;
+  }
+
   /* Écrans d'onboarding : logo en haut, contenu, action en bas */
   .onboarding {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-48);
+    justify-content: flex-start;
+    gap: var(--space-40);
     flex: 1 0 auto;
     width: 100%;
     max-width: var(--screen-max);
@@ -122,6 +134,10 @@
     gap: var(--space-32);
     width: 100%;
   }
+
+  /* Formulaire + action principale regroupés et centrés : pas de grands vides */
+  .onboarding__head + .onboarding__body { margin-top: auto; }
+  .onboarding__body + .button { margin-bottom: auto; }
 
 
   /* Empilements génériques */

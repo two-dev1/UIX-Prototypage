@@ -7,6 +7,7 @@ import { PostCard } from "../components/PostCard.ts";
 import { postActions } from "../components/postActions.ts";
 import { openSheet } from "../components/Sheet.ts";
 import { OUTS_CATALOG, Sticker } from "../components/Sticker.ts";
+import { InstallButton, canOfferInstall } from "../install.ts";
 import { navigate } from "../router.ts";
 import { getCurrentUser, getFollowedOrganizers, getOuts, getPosts, getScore, getTickets } from "../store.ts";
 import type { AvatarId } from "../types.ts";
@@ -64,6 +65,11 @@ export function renderProfile(): void {
             : `<div class="empty"><p class="body">Aucun post publié.</p><button type="button" class="button button--secondary button--label" data-action="create">Publier une photo</button></div>`
         }
       </section>
+      ${
+        canOfferInstall()
+          ? `<section class="stack stack--12" aria-labelledby="install-title"><h3 id="install-title" class="h2">Application</h3>${InstallButton()}</section>`
+          : ""
+      }
       ${
         user
           ? `<section class="stack stack--12" aria-labelledby="account-title">

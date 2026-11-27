@@ -6,6 +6,7 @@ import "./styles/responsive.css";
 import "./styles/utilities.css";
 
 import { registerSW } from "virtual:pwa-register";
+import "./install.ts"; // capte tôt l’événement d’installation PWA
 import { rememberReturnPath, toast } from "./app.ts";
 import { initAuth, isAuthenticated } from "./auth.ts";
 import { currentPath, navigate, readRoute, startRouter, type AppRoute } from "./router.ts";

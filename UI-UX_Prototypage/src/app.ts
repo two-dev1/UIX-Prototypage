@@ -7,6 +7,7 @@ import { currentPath, navigate } from "./router.ts";
 import { isHtmlElement, requireElement } from "./utils/dom.ts";
 import { escapeHtml } from "./utils/html.ts";
 import { icon } from "./utils/icons.ts";
+import { randomPartyImage } from "./utils/images.ts";
 
 export const root = requireElement(document, "#app", isHtmlElement);
 
@@ -187,6 +188,32 @@ export function requireAuth(returnPath?: string): boolean {
   return false;
 }
 
+/** Grand logo « 75 » rempli d'une photo d'événement tirée au hasard (soirée, concert, foule). */
+export function BigMark(className = "", eager = false): string {
+  return `<span class="logo-75 big-mark${className ? ` ${className}` : ""}" aria-hidden="true">
+    <img src="${randomPartyImage()}" alt="" width="440" height="320" decoding="async" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'}>
+  </span>`;
+}
+
+/**
+ * Gabarit des écrans d'entrée (intro, connexion, inscription, tutoriel…).
+ * Mobile : seul le formulaire est affiché. Desktop (≥ 1024 px) : écran coupé en deux,
+ * panneau de marque OUT75 à gauche, formulaire à droite.
+ */
+export function entry(screen: string): string {
+  return `<div class="entry">
+    <aside class="entry__brand" aria-hidden="true">
+      <span class="entry__logo">${icon("logo-text")}</span>
+      ${BigMark("entry__mark", true)}
+      <div class="entry__tagline">
+        <p class="display display--violet">Bonjour, Paris.</p>
+        <p class="body">Concerts, expos, théâtre, cinéma, sorties gratuites : toutes les sorties culturelles de Paris, et la communauté des Outers.</p>
+      </div>
+    </aside>
+    ${screen}
+  </div>`;
+}
+
 /** Page « Rejoins les Outers » : écran d'entrée et portail des actions engageantes. */
 export function JoinPanel(options: { back: boolean }): string {
   return `<section class="fullscreen">
@@ -194,16 +221,18 @@ export function JoinPanel(options: { back: boolean }): string {
         ${options.back ? `<button type="button" class="icon-button" data-action="close" aria-label="Retour">${icon("back")}</button>` : ""}
         <span class="logo" aria-label="OUT75" role="img">${icon("logo-text")}</span>
       </div>
-      <div class="stack stack--16">
-        <span class="logo-75" aria-hidden="true">${icon("logo-75")}</span>
-        <h1 class="display">Rejoins les Outers.</h1>
-        <p class="body">Connecte-toi ou crée ton compte pour réserver, poster, commenter, liker et enregistrer tes sorties.</p>
-      </div>
-      <div class="stack stack--12">
+      <div class="join">
+        ${BigMark("", true)}
+        <div class="stack stack--12">
+          <h1 class="display">Rejoins les Outers.</h1>
+          <p class="body">Connecte-toi ou crée ton compte pour réserver, poster, commenter, liker et enregistrer tes sorties.</p>
+        </div>
+        <div class="stack stack--12">
         <button type="button" class="button button--primary button--block" data-action="gate-login">Se connecter</button>
         <button type="button" class="button button--secondary button--block" data-action="gate-register">Créer un compte</button>
         <button type="button" class="button button--ghost button--block button--label" data-action="${options.back ? "close" : "guest"}">Continuer en invité</button>
         <p class="caption muted center legal-links">En continuant, tu acceptes les <a href="/conditions.html">conditions d’utilisation</a> et la <a href="/confidentialite.html">politique de confidentialité</a>. <a href="/a-propos.html">À propos d’OUT75</a></p>
+        </div>
       </div>
     </section>`;
 }

@@ -2,7 +2,7 @@
  * Création de post / story : « Accès Appareil » → « Photo » → publication.
  * Capture WebRTC (getUserMedia) avec repli sur <input type="file" capture="environment">.
  */
-import { mountScreen, openAuthGate, root, toast } from "../app.ts";
+import { entry, mountScreen, openAuthGate, root, toast } from "../app.ts";
 import { isAuthenticated } from "../auth.ts";
 import { goBack, navigate } from "../router.ts";
 import { getCurrentUser, getPosts, setPosts } from "../store.ts";
@@ -20,7 +20,7 @@ export function renderCamera(): void {
   }
   const supported = Boolean(navigator.mediaDevices?.getUserMedia);
   mountScreen(
-    `<main class="onboarding onboarding--center">
+    entry(`<main class="onboarding onboarding--center">
       <input type="file" accept="image/*" capture="environment" class="visually-hidden" id="file-capture" tabindex="-1" aria-hidden="true">
       <div class="stack stack--32 stack--center">
         <p class="h2 center">Autoriser l’utilisation de l’appareil photo de votre appareil</p>
@@ -28,7 +28,7 @@ export function renderCamera(): void {
         <button type="button" class="button button--ghost button--label" data-action="gallery">${icon("gallery")} Choisir dans la galerie</button>
         <button type="button" class="button button--ghost button--label" data-action="cancel">Annuler</button>
       </div>
-    </main>`,
+    </main>`),
     {
       allow: () => (supported ? void startCamera() : pickFile()),
       gallery: pickFile,
@@ -168,13 +168,13 @@ async function downscale(file: File): Promise<string> {
 function renderComposer(image: string): void {
   let kind: "post" | "story" = "post";
   const signal = mountScreen(
-    `<main class="screen screen--bare">
+    `<main class="screen screen--bare composer">
       <header class="topbar">
         <button type="button" class="icon-button icon-button--edge" data-action="retake" aria-label="Reprendre">${icon("back")}</button>
         <h1 class="topbar__title"><span>Nouvelle publication</span></h1>
         <span class="icon-button icon-button--edge" aria-hidden="true"></span>
       </header>
-      <div class="composer-preview"><img src="${escapeHtml(image)}" alt="Aperçu de la photo" width="350" height="438"></div>
+      <div class="composer__media"><div class="composer-preview"><img src="${escapeHtml(image)}" alt="Aperçu de la photo" width="350" height="438"></div></div>
       <form class="stack stack--16" id="composer">
         <div class="segmented" role="radiogroup" aria-label="Type de publication">
           <button type="button" class="chip is-active" role="radio" aria-checked="true" data-action="kind" data-kind="post">Post</button>

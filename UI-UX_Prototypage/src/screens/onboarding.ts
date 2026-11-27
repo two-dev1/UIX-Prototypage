@@ -1,5 +1,5 @@
 /** Parcours d'entrée : Loading → Choix de connexion → Inscription / Connexion → Tutoriel (passable). */
-import { JoinPanel, consumeReturnPath, mountScreen, peekReturnPath, rememberReturnPath, root, toast } from "../app.ts";
+import { BigMark, JoinPanel, consumeReturnPath, entry, mountScreen, peekReturnPath, rememberReturnPath, root, toast } from "../app.ts";
 import {
   AuthError,
   googleLogin,
@@ -63,7 +63,7 @@ export function renderTutorial(): void {
     navigate(consumeReturnPath(), { replace: true });
   };
   const signal = mountScreen(
-    `<main class="onboarding tutorial">
+    entry(`<main class="onboarding tutorial">
       <div class="onboarding__head">
         ${Logo}
         <button type="button" class="button button--ghost button--label tutorial__skip" data-action="skip">Passer</button>
@@ -71,8 +71,12 @@ export function renderTutorial(): void {
       <div class="tutorial__track" data-track aria-roledescription="carrousel" aria-label="Découvrir OUT75">
         ${SLIDES.map(
           (slide, position) => `<section class="tutorial__slide" aria-roledescription="diapositive" aria-label="${position + 1} sur ${SLIDES.length}">
-            <span class="tutorial__visual${slide.visual === "logo-75" ? " tutorial__visual--wide" : ""}" aria-hidden="true">${iconSvg(slide.visual)}</span>
-            <div class="stack stack--8">
+            ${
+              slide.visual === "logo-75"
+                ? BigMark("tutorial__visual--wide", true)
+                : `<span class="tutorial__visual" aria-hidden="true">${iconSvg(slide.visual)}</span>`
+            }
+            <div class="stack stack--12">
               <h1 class="display${slide.violet ? " display--violet" : ""}">${slide.title}</h1>
               <p class="body">${slide.text}</p>
             </div>
@@ -83,7 +87,7 @@ export function renderTutorial(): void {
         <div class="tutorial__dots" aria-hidden="true">${SLIDES.map((_, position) => `<span class="tutorial__dot${position === 0 ? " is-active" : ""}"></span>`).join("")}</div>
         <button type="button" class="button button--secondary button--fixed" data-action="next">Suivant</button>
       </div>
-    </main>`,
+    </main>`),
     {
       skip: finish,
       next: () => {
@@ -116,7 +120,7 @@ export function renderTutorial(): void {
 
 /** Écran d'entrée (après le loader) : la page « Rejoins les Outers », sans retour. */
 export function renderStart(): void {
-  mountScreen(`<main class="onboarding onboarding--join">${JoinPanel({ back: false })}</main>`, {
+  mountScreen(entry(`<main class="onboarding onboarding--join">${JoinPanel({ back: false })}</main>`), {
     "gate-login": () => navigate("/auth/login"),
     "gate-register": () => navigate("/auth/register"),
     guest: () => {
@@ -191,17 +195,17 @@ export function renderAuth(mode: AuthMode): void {
   const copy = COPY[mode];
   const withSocial = mode === "login" || mode === "register";
   mountScreen(
-    `<main class="onboarding">
+    entry(`<main class="onboarding">
       <div class="onboarding__head">
         <button type="button" class="icon-button icon-button--edge onboarding__back" data-action="back" aria-label="Retour">${icon("back")}</button>
         ${Logo}
       </div>
       <form class="onboarding__body" id="auth-form" novalidate>
-        <div class="stack stack--8">
+        <div class="stack stack--12">
           <h1 class="display">${copy.title}</h1>
           <p class="body">${copy.subtitle}</p>
         </div>
-        <div class="stack stack--26">
+        <div class="stack stack--24">
           ${fields(mode)}
           ${mode === "login" ? `<button type="button" class="link link--underline self-start" data-action="switch" data-to="forgot">Mot de passe oublié ?</button>` : ""}
           <p class="form-error" data-error role="alert" hidden></p>
@@ -214,7 +218,7 @@ export function renderAuth(mode: AuthMode): void {
         }
       </form>
       <button type="submit" form="auth-form" class="button button--secondary button--fixed">${copy.submit}</button>
-    </main>`,
+    </main>`),
     {
       back: () => goBack(mode === "forgot" ? "/auth/login" : "/start"),
       switch: (target) => navigate(`/auth/${target.dataset.to}`, { replace: true }),

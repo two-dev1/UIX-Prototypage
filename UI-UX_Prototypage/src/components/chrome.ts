@@ -14,6 +14,7 @@ import { getCurrentUser, getTickets } from "../store.ts";
 import { CATEGORIES, parseDate } from "../utils/events.ts";
 import { escapeHtml } from "../utils/html.ts";
 import { avatarImg, icon, type IconName } from "../utils/icons.ts";
+import { InstallButton, canOfferInstall, installActions } from "../install.ts";
 import { openLive } from "./LiveModal.ts";
 import { openSearch, type SearchHandler } from "./SearchOverlay.ts";
 
@@ -138,6 +139,15 @@ function SidePanel(): string {
       }</div>
       ${tickets}
     </section>
+    ${
+      canOfferInstall()
+        ? `<section class="side-card" aria-labelledby="panel-install" data-install-cta>
+            <h2 id="panel-install" class="h2">Installe OUT75</h2>
+            <p class="caption muted">Ajoute l’app à ton écran d’accueil ou à ton bureau : ouverture en un clic, plein écran.</p>
+            ${InstallButton("button button--primary button--block button--label")}
+          </section>`
+        : ""
+    }
   </aside>`;
 }
 
@@ -181,6 +191,7 @@ document.addEventListener("submit", (event) => {
 export function chromeActions(options: { onSearch?: SearchHandler; backFallback?: string } = {}): ActionMap {
   activeSearch = options.onSearch ?? defaultSearch;
   return {
+    ...installActions(),
     nav: (target) => navigate(`/${target.dataset.to ?? "home"}`),
     back: () => goBack(options.backFallback ?? "/home"),
     create: () => {

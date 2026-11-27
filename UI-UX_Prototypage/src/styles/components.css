@@ -34,6 +34,27 @@
     aspect-ratio: 440 / 320;
   }
 
+  /* Grand « 75 » : le logo sert de masque à une photo d'événement */
+  .big-mark {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-card);
+    -webkit-mask: url("../assets/icons/logo-75.svg") center / contain no-repeat;
+    mask: url("../assets/icons/logo-75.svg") center / contain no-repeat;
+  }
+
+  .big-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: mark-in 600ms var(--ease);
+  }
+
+  @keyframes mark-in {
+    from { opacity: 0; transform: scale(1.06); }
+    to { opacity: 1; transform: none; }
+  }
+
   .logo-75 .icon,
   .logo-75 svg {
     width: 100%;
@@ -1021,6 +1042,81 @@
   .legal-links a { color: var(--color-text-muted); text-decoration: underline; text-underline-offset: 2px; }
   .legal-links a:hover { color: var(--color-primary); }
 
+  /* ---------- Panneau de marque (écrans d'entrée, desktop) ---------- */
+  .entry__logo { display: flex; width: 160px; height: 46px; }
+  .entry__logo .icon,
+  .entry__mark .icon { width: 100%; height: 100%; }
+  .entry__mark { display: flex; width: min(560px, 100%); aspect-ratio: 440 / 320; }
+
+  .entry__tagline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    max-width: 520px;
+  }
+
+  .entry__tagline .display { font-size: clamp(40px, 4.4vw, 64px); line-height: 1; }
+  .entry__tagline .body { color: var(--color-text-muted); font-size: 20px; line-height: 1.45; }
+
+  .composer__media { display: flex; width: 100%; }
+
+  /* ---------- Installation PWA ---------- */
+  .install-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-16);
+    width: 100%;
+    padding: var(--space-16) var(--space-20);
+    border: 1px solid var(--color-secondary);
+    border-radius: var(--radius-card);
+    background: linear-gradient(135deg, rgb(112 51 255 / 0.28), rgb(112 51 255 / 0.06)), var(--color-card);
+    animation: screen-in var(--duration) var(--ease);
+  }
+
+  .install-banner__icon {
+    display: flex;
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-media);
+  }
+
+  .install-banner__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    flex: 1 1 180px;
+    min-width: 0;
+  }
+
+  .install-banner__text .caption { color: var(--color-text-muted); }
+
+  .install-banner__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    margin-left: auto;
+  }
+
+  .install-banner__actions .button { min-height: 48px; }
+
+  .install-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-20);
+  }
+
+  .install-steps__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    padding-left: var(--space-24);
+    list-style: decimal;
+    font-size: var(--text-body-size);
+    line-height: 1.45;
+  }
+
   /* ---------- Tutoriel ---------- */
   .tutorial__visual {
     display: flex;
@@ -1030,8 +1126,8 @@
   }
 
   .tutorial__visual--wide {
-    width: calc(100% + var(--gutter) * 2);
-    margin-inline: calc(var(--gutter) * -1);
+    align-self: center;
+    width: 100%;
     aspect-ratio: 440 / 320;
   }
 
@@ -1058,8 +1154,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-32);
+    justify-content: flex-start;
+    gap: var(--space-40);
     width: 100%;
     max-width: var(--screen-max);
     min-height: 100dvh;
@@ -1070,6 +1166,15 @@
     overflow-y: auto;
   }
 
+
+  /* Bloc principal centré verticalement entre l'en-tête et le bas de l'écran (espaces équilibrés) */
+  .join {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+    width: 100%;
+    margin-block: auto;
+  }
 
   .fullscreen__head {
     display: flex;
@@ -1085,6 +1190,7 @@
   /* ---------- Caméra ---------- */
   .camera {
     display: flex;
+    margin-inline: auto;
     flex-direction: column;
     justify-content: space-between;
     position: relative;

@@ -10,6 +10,7 @@ import { AppScreen, TopBar, chromeActions } from "../components/chrome.ts";
 import { EventCard, EventCardSkeleton } from "../components/EventCard.ts";
 import { cacheEvents, eventCardActions } from "../components/eventActions.ts";
 import { openSheet } from "../components/Sheet.ts";
+import { InstallBanner } from "../install.ts";
 import { navigate } from "../router.ts";
 import { getFavorites, getLikedEvents } from "../store.ts";
 import type { ParisEvent } from "../types.ts";
@@ -90,6 +91,7 @@ export function renderHome(): void {
         <h2 class="display">${state.searchValue ? `« ${escapeHtml(state.searchValue)} »` : "On sort sur Paris?"}</h2>
         <div class="h-scroll" data-pills role="toolbar" aria-label="Filtres">${pills()}</div>
       </section>
+      ${InstallBanner()}
       <section class="feed" aria-labelledby="feed-title">
         <h2 id="feed-title" class="visually-hidden">Événements</h2>
         <ul class="feed" id="event-grid"></ul>

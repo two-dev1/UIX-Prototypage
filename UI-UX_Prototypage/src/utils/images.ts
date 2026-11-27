@@ -21,6 +21,22 @@ const FALLBACKS: Record<string, string> = {
   Expo: "1554907984-15263bfd63bd",
 };
 
+/** Photos de soirées, concerts et foules (remplissage du grand « 75 »). */
+const PARTY_PHOTOS = [
+  "1501386761578-eac5c94b800a",
+  "1514525253161-7a46d19cd819",
+  "1470229722913-7c0e2dbbafd3",
+  "1459749411175-04bf5292ceea",
+  "1492684223066-81342ee5ff30",
+  "1533174072545-7a4b6ad7a6c3",
+  "1516450360452-9312f5e86fc7",
+  "1429962714451-bb934ecdc4ec",
+];
+
+export function randomPartyImage(width = 900): string {
+  return unsplash(PARTY_PHOTOS[Math.floor(Math.random() * PARTY_PHOTOS.length)], width);
+}
+
 export function fallbackImage(category = "Paris", width?: number): string {
   return unsplash(FALLBACKS[category] ?? FALLBACKS.Paris, width);
 }
