@@ -203,6 +203,7 @@ export function JoinPanel(options: { back: boolean }): string {
         <button type="button" class="button button--primary button--block" data-action="gate-login">Se connecter</button>
         <button type="button" class="button button--secondary button--block" data-action="gate-register">Créer un compte</button>
         <button type="button" class="button button--ghost button--block button--label" data-action="${options.back ? "close" : "guest"}">Continuer en invité</button>
+        <p class="caption muted center legal-links">En continuant, tu acceptes les <a href="/conditions.html">conditions d’utilisation</a> et la <a href="/confidentialite.html">politique de confidentialité</a>.</p>
       </div>
     </section>`;
 }

@@ -69,6 +69,7 @@ export function renderProfile(): void {
           ? `<section class="stack stack--12" aria-labelledby="account-title">
               <h3 id="account-title" class="h2">Compte</h3>
               <button type="button" class="button button--outline button--block button--label" data-action="logout">${icon("logout")} Se déconnecter</button>
+              <p class="caption muted center legal-links"><a href="/confidentialite.html">Confidentialité</a> · <a href="/conditions.html">Conditions d’utilisation</a></p>
             </section>`
           : ""
       }`,

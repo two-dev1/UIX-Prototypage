@@ -1,0 +1,69 @@
+/* Pages légales (statiques, hors application) — mêmes tokens que l'app, 100 % flex. */
+:root {
+  color-scheme: dark;
+  --lime: #b8e62e;
+  --violet: #7033ff;
+  --bg: #151515;
+  --surface: #191919;
+  --card: #353535;
+  --muted: #bcbcbc;
+  --white: #fefefe;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  display: flex;
+  justify-content: center;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--white);
+  font: 17px/1.55 "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+  max-width: 720px;
+  padding: 48px 20px 64px;
+  background: var(--surface);
+}
+
+header { display: flex; flex-direction: column; gap: 12px; }
+
+.back {
+  display: flex;
+  align-self: flex-start;
+  color: var(--lime);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+h1, h2 {
+  font-family: "Anton", Impact, sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+h1 { font-size: 40px; }
+h2 { font-size: 24px; color: var(--lime); }
+
+section { display: flex; flex-direction: column; gap: 10px; }
+
+ul { display: flex; flex-direction: column; gap: 6px; padding-left: 20px; }
+
+a { color: var(--lime); }
+
+.muted { color: var(--muted); font-size: 14px; }
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  border-radius: 24px;
+  background: var(--card);
+}

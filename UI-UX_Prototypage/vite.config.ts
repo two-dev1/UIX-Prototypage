@@ -22,6 +22,8 @@ export default defineConfig({
         icons: [{ src: "favicon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" }],
       },
       workbox: {
+        // Pages légales statiques : jamais remplacées par l’app (SPA).
+        navigateFallbackDenylist: [/^\/(confidentialite|conditions)\.html$/],
         globPatterns: ["**/*.{js,css,html,svg,woff2}"],
         runtimeCaching: [
           {

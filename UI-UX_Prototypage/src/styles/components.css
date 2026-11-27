@@ -1018,6 +1018,9 @@
 
   .sticker-popup__art svg { width: 100%; height: 100%; }
 
+  .legal-links a { color: var(--color-text-muted); text-decoration: underline; text-underline-offset: 2px; }
+  .legal-links a:hover { color: var(--color-primary); }
+
   /* ---------- Tutoriel ---------- */
   .tutorial__visual {
     display: flex;
