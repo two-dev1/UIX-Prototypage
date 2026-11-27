@@ -10,7 +10,10 @@ const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
 });
 
 /** Rend une carte événement prête à être insérée dans la grille. */
-export function EventCard(event: ParisEvent): string {
+export function EventCard(
+  event: ParisEvent,
+  options: { saved?: boolean } = {},
+): string {
   const title = asText(event.title) || "Événement sans titre";
   const lead = truncate(toPlainText(event.lead_text), LEAD_MAX_LENGTH);
   const place = formatPlace(event);
@@ -19,17 +22,31 @@ export function EventCard(event: ParisEvent): string {
     asText(event.price_type).toLowerCase() === "gratuit"
       ? "card__price card__price--free"
       : "card__price";
+  const saved = options.saved === true;
+  const slot = getEventSlot(event.date_start);
+  const likes =
+    12 +
+    Math.abs(
+      asText(event.id)
+        .split("")
+        .reduce((sum, char) => sum + char.charCodeAt(0), 0) % 80,
+    );
 
   return `
     <article class="card" data-id="${escapeHtml(asText(event.id))}">
+      <button type="button" class="card__bookmark${saved ? " is-active" : ""}" data-bookmark="${escapeHtml(asText(event.id))}" aria-label="${saved ? "Retirer des favoris" : "Ajouter aux favoris"}">${saved ? "★" : "☆"}</button>
       ${renderCover(event, title)}
       <div class="card__body">
-        ${price ? `<p class="${priceClass}">${escapeHtml(price)}</p>` : ""}
-        <h2 class="card__title">${escapeHtml(title)}</h2>
+        ${slot ? `<p class="card__slot">${escapeHtml(slot)}</p>` : ""}
+        ${price ? `<p class="${priceClass}">${escapeHtml(price)}</p>` : `<p class="card__price">Tarif non précisé</p>`}
+        <h2 class="card__title"><button type="button" class="card__title-button" data-event-open="${escapeHtml(asText(event.id))}">${escapeHtml(title)}</button></h2>
         ${renderDates(event)}
         ${place ? `<p class="card__place">${escapeHtml(place)}</p>` : ""}
         ${lead ? `<p class="card__lead">${escapeHtml(lead)}</p>` : ""}
-        ${renderLink(event.url, title)}
+        <div class="card__actions">
+          <button type="button" class="button button--small" data-event-like="${escapeHtml(asText(event.id))}" aria-label="Liker cet événement">♡ ${likes}</button>
+          <button type="button" class="button button--small button--primary" data-event-open="${escapeHtml(asText(event.id))}">Voir</button>
+        </div>
       </div>
     </article>
   `;
@@ -79,12 +96,6 @@ function renderDates(event: ParisEvent): string {
     : "";
 }
 
-function renderLink(url: string | null, title: string): string {
-  const href = asText(url);
-  if (!isHttpUrl(href)) return "";
-  return `<a class="card__link" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(`En savoir plus sur ${title}`)}">En savoir plus</a>`;
-}
-
 function formatPlace(event: ParisEvent): string {
   return [asText(event.address_name), asText(event.address_city)]
     .filter((part) => part.length > 0)
@@ -120,11 +131,14 @@ function truncate(text: string, maxLength: number): string {
   return `${cut.trimEnd()}…`;
 }
 
-function isHttpUrl(value: string): boolean {
-  try {
-    const url = new URL(value);
-    return url.protocol === "https:" || url.protocol === "http:";
-  } catch {
-    return false;
-  }
+export function getEventSlot(
+  dateStart: string | null,
+): "Matin" | "Journée" | "Soir" | "" {
+  if (!dateStart) return "";
+  const date = new Date(dateStart);
+  if (Number.isNaN(date.getTime())) return "";
+  const hour = date.getHours();
+  if (hour < 12) return "Matin";
+  if (hour < 18) return "Journée";
+  return "Soir";
 }

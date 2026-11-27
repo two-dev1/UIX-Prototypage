@@ -2,54 +2,72 @@
 @layer tokens, base, layout, components, utilities;
 
 :root {
-  --color-ink: #1c1915;
-  --color-muted: #5c564c;
-  --color-paper: #f3efe6;
-  --color-card: #fffdf8;
-  --color-line: #e4dccf;
-  --color-primary: #143c73;
-  --color-primary-dark: #0d2a52;
-  --color-free: #1f6b45;
-  --color-free-bg: #e7f4ec;
-  --color-paid: #8a4b12;
-  --color-paid-bg: #f8ead8;
-  --color-danger: #8d2b2b;
-  --color-danger-bg: #fdecec;
+  --color-ink: #151515;
+  --color-muted: #bcbcbc;
+  --color-paper: #fefefe;
+  --color-card: #fefefe;
+  --color-line: #353535;
+  --color-primary: #b8e62e;
+  --color-primary-dark: #9bc51f;
+  --color-secondary: #7033ff;
+  --color-background: #151515;
+  --color-surface: #191919;
+  --color-border-dark: #353535;
+  --color-text-muted-dark: #bcbcbc;
+  --color-free: #151515;
+  --color-free-bg: #b8e62e;
+  --color-paid: #fefefe;
+  --color-paid-bg: #7033ff;
+  --color-danger: #7033ff;
+  --color-danger-bg: #fefefe;
   --color-transparent: transparent;
-  --color-focus: #ffffff;
+  --color-focus: #151515;
 
-  --font-sans: "Segoe UI", system-ui, sans-serif;
-  --font-size-base: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
-  --font-size-h1: clamp(1.8rem, 5vw, 2.6rem);
-  --font-size-card-title: clamp(1.125rem, 2.5vw, 1.25rem);
-  --font-size-small: clamp(0.78rem, 1.8vw, 0.92rem);
-  --font-size-input: 1rem;
-  --line-height-base: 1.5;
-  --line-height-heading: 1.15;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-display: "Anton", Impact, sans-serif;
+  --font-size-base: 18px;
+  --font-size-h1: 24px;
+  --font-size-display-xl: 40px;
+  --font-size-card-title: 18px;
+  --font-size-small: 12px;
+  --font-size-input: 16px;
+  --line-height-base: 1.25;
+  --line-height-heading: 1.14;
 
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-8: 3rem;
-  --radius-small: 0.5rem;
-  --radius-medium: 1rem;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --radius-media: 16px;
+  --radius-card: 24px;
+  --radius-price: 10px;
   --radius-pill: 999px;
-  --shadow-card: 0 10px 24px rgba(28, 25, 21, 0.06);
+  --shadow-card: 0 12px 32px rgba(21, 21, 21, 0.16);
 
-  --container-width: 1120px;
-  --card-min-width: 280px;
-  --media-ratio: 16 / 9;
+  --container-width: 390px;
+  --card-min-width: 350px;
+  --media-ratio: 16 / 10;
   --touch-target-min: 44px;
-  --bottom-bar-height: 64px;
+  --bottom-bar-height: 72px;
 
   --space-safe-top: env(safe-area-inset-top);
   --space-safe-right: env(safe-area-inset-right);
   --space-safe-bottom: env(safe-area-inset-bottom);
   --space-safe-left: env(safe-area-inset-left);
   --outline-focus-width: 3px;
+
+  --space-1: var(--space-4);
+  --space-2: var(--space-8);
+  --space-3: var(--space-12);
+  --space-5: var(--space-20);
+  --space-6: var(--space-32);
+  --radius-small: var(--radius-media);
+  --radius-medium: var(--radius-card);
 }
 
 [data-theme="dark"] {

@@ -31,9 +31,17 @@ body {
   font-family: var(--font-sans);
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
-  color: var(--color-ink);
-  background: var(--color-paper);
-  color-scheme: light;
+  color: #fefefe;
+  background: var(--color-background);
+  color-scheme: dark;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  text-transform: uppercase;
 }
 
 [data-theme="dark"] {
@@ -53,6 +61,7 @@ select {
   min-height: var(--touch-target-min);
   font: inherit;
   font-size: var(--font-size-input);
+  border-radius: var(--radius-pill);
 }
 
 a {
@@ -65,6 +74,11 @@ input,
 textarea,
 select {
   touch-action: manipulation;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
